@@ -1,13 +1,17 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 import {
   RootStateOrAny,
   TypedUseSelectorHook,
   useDispatch,
   useSelector,
-} from "react-redux";
+} from 'react-redux';
+import roomReducer from '../room/roomSlice';
+import userReducer from '../user/userSlice';
+
 const store = configureStore({
   reducer: {
-   
+    room: roomReducer,
+    user: userReducer,
   },
 });
 
