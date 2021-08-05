@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './logo.svg';
 import './App.css';
-import { useAppSelector } from './store/setup/store';
+import { useAppDispatch, useAppSelector } from './store/setup/store';
+import { getUserAsync } from './store/user/userSlice';
 
 function App() {
   const user = useAppSelector((state) => state.user);
-  console.log(user.enteredGame);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    localStorage.setItem('userId', '60c751315d4513378053af08');
+    dispatch(getUserAsync());
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          {user.enteredGame.toString()}
+          {user.enteredGame && user.enteredGame.toString()}
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
         <a
