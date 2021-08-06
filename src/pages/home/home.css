@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+.App {
+  background-image: linear-gradient(
+    to right top,
+    #00efff,
+    #0fe3ff,
+    #35d6ff,
+    #53c9ff,
+    #6cbbf8,
+    #6bbcf8,
+    #6abef8,
+    #69bff8,
+    #52cffe,
+    #41dfff,
+    #46eefa,
+    #5ffbf1
+  );
+  height: 100vh;
+}
+
+.header {
+  padding-top: 5em;
+  text-align: center;
+  font-family: 'Bangers', cursive;
+}
+
+.header > h1 {
+  font-size: 10vw;
+  color: purple;
+}
+
+.home-form {
+  margin-top: 5em;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.join-room > form {
+  display: flex;
+}
+
+.join-room > form > div.MuiFormControl-root > label.MuiFormLabel-root {
+  font-size: 1.5em !important;
+}
+
+.join-room > form > div.MuiFormControl-root > div.MuiInputBase-root {
+  font-size: 3vw !important;
+  width: 60%;
+}
+
+.join-room > form > Button {
+  /* margin-left: 2em; */
+  /* padding: 2em; */
+  font-size: 2.8vw;
+}
+
+@media only screen and (max-width: 426px) {
+  .header > h1 {
+    font-size: 20vw;
+  }
+}
