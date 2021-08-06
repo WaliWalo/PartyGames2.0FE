@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import { useAppDispatch, useAppSelector } from './store/setup/store';
 import { getUserAsync } from './store/user/userSlice';
+import { getRoomAsync } from './store/room/roomSlice';
 
 function App() {
   const user = useAppSelector((state) => state.user);
@@ -12,6 +13,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem('userId', '60c751315d4513378053af08');
     dispatch(getUserAsync());
+    dispatch(getRoomAsync());
   }, []);
 
   return (
