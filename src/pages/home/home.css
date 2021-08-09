@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 .App {
   background-image: linear-gradient(
     to right top,
@@ -31,33 +31,105 @@
 }
 
 .home-form {
-  margin-top: 5em;
+  margin: 3em 10em 0 10em;
   display: flex;
   justify-content: center;
   align-content: center;
+  flex-direction: column;
 }
 
-.join-room > form {
+.join-room > form,
+.create-room > form {
   display: flex;
+  justify-content: center;
 }
 
-.join-room > form > div.MuiFormControl-root > label.MuiFormLabel-root {
+.join-room
+  > form
+  > div.create-fields
+  > div.MuiFormControl-root
+  > label.MuiFormLabel-root,
+.create-room
+  > form
+  > div.create-fields
+  > div.MuiFormControl-root
+  > label.MuiFormLabel-root {
   font-size: 1.5em !important;
 }
 
-.join-room > form > div.MuiFormControl-root > div.MuiInputBase-root {
+.join-room
+  > form
+  > div.create-fields
+  > div.MuiFormControl-root
+  > div.MuiInputBase-root,
+.create-room
+  > form
+  > div.create-fields
+  > div.MuiFormControl-root
+  > div.MuiInputBase-root {
   font-size: 3vw !important;
-  width: 60%;
+  width: 100%;
 }
 
-.join-room > form > Button {
-  /* margin-left: 2em; */
-  /* padding: 2em; */
+.join-room > form > Button,
+.create-room > form > Button {
   font-size: 2.8vw;
+  font-family: 'Fredoka One', cursive;
+  width: 20%;
+  margin-left: 2em;
+}
+
+.create-fields {
+  display: flex;
+  width: 35%;
+  flex-direction: column;
+}
+
+div.create-fields * {
+  margin-right: 0.5em;
+  width: 100%;
 }
 
 @media only screen and (max-width: 426px) {
   .header > h1 {
     font-size: 20vw;
+  }
+
+  .home-form {
+    margin: 3em 3em 0 3em;
+  }
+
+  .join-room > form,
+  .create-room > form {
+    justify-content: space-evenly;
+  }
+
+  .join-room > form > div.MuiFormControl-root > label.MuiFormLabel-root,
+  .create-room > form > div.MuiFormControl-root > label.MuiFormLabel-root {
+    font-size: 1em !important;
+  }
+
+  .join-room
+    > form
+    > div.create-fields
+    > div.MuiFormControl-root
+    > div.MuiInputBase-root,
+  .create-room
+    > form
+    > div.create-fields
+    > div.MuiFormControl-root
+    > div.MuiInputBase-root {
+    font-size: 5vw !important;
+  }
+
+  .create-room > form Button,
+  .join-room > form Button {
+    padding: 2em;
+    margin-left: 1em;
+  }
+
+  .create-fields {
+    flex-direction: column;
+    width: 100%;
   }
 }
