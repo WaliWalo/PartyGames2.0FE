@@ -1,22 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
-.App {
-  background-image: linear-gradient(
-    to right top,
-    #00efff,
-    #0fe3ff,
-    #35d6ff,
-    #53c9ff,
-    #6cbbf8,
-    #6bbcf8,
-    #6abef8,
-    #69bff8,
-    #52cffe,
-    #41dfff,
-    #46eefa,
-    #5ffbf1
-  );
+
+video {
+  object-fit: cover;
+  width: 100vw;
   height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.App {
+  height: 100vh;
+  position: relative;
 }
 
 .header {
@@ -55,6 +52,7 @@
   > div.MuiFormControl-root
   > label.MuiFormLabel-root {
   font-size: 1.5em !important;
+  font-family: 'Fredoka One', cursive;
 }
 
 .join-room
@@ -69,6 +67,12 @@
   > div.MuiInputBase-root {
   font-size: 3vw !important;
   width: 100%;
+  font-family: 'Fredoka One', cursive;
+}
+
+#select-helper-label,
+#select-required {
+  padding-left: 0.6em;
 }
 
 .join-room > form > Button,
@@ -81,7 +85,7 @@
 
 .create-fields {
   display: flex;
-  width: 35%;
+  width: 60%;
   flex-direction: column;
 }
 
