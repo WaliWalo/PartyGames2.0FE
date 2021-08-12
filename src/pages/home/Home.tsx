@@ -14,6 +14,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import gsap from 'gsap';
 import HomeLoader from './../loader/HomeLoader';
+import ActionButtons from './../../components/buttons/ActionButtons';
 
 function Home() {
   const matches = useMediaQuery('(max-width: 426px)');
