@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+.optionsBtn {
+  font-size: 200% !important;
+  font-family: 'Fredoka One', cursive !important;
+  text-transform: uppercase;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.optionOrContainer {
+  display: flex;
+  align-items: center;
+}
+
+.optionOr {
+  font-family: 'Bangers', cursive;
+  font-size: 10vw;
+}
+
+.todTitle {
+  font-size: 8em;
+  font-family: 'Bangers', cursive;
+  text-transform: uppercase;
+}
+
+#combo-box-demo {
+  width: 100%;
+  font-size: 1.5em;
+  font-family: 'Fredoka One';
+}
+
+#combo-box-demo-label {
+  font-size: 3em;
+  line-height: 0.6;
+  font-family: 'Bangers', cursive;
+}
+
+.MuiInputLabel-outlined.MuiInputLabel-shrink {
+  transform: translate(14px, -14px) scale(0.75) !important;
+}
+
+.questionsBtn {
+  height: 100%;
+  width: 100%;
+}
+
+@media only screen and (max-width: 426px) {
+  .optionsBtn {
+    font-size: 150% !important  ;
+    /* padding: 1em !important ; */
+  }
+
+  .optionOrContainer {
+    justify-content: center;
+  }
+
+  .optionOr {
+    font-size: 4em !important;
+  }
+
+  #combo-box-demo {
+    font-size: 1em;
+  }
+}

@@ -7,11 +7,13 @@ import {
 } from 'react-redux';
 import roomReducer from '../room/roomSlice';
 import userReducer from '../user/userSlice';
+import questionsReducer from '../questions/questionsSlice';
 
 const store = configureStore({
   reducer: {
     room: roomReducer,
     user: userReducer,
+    questions: questionsReducer,
   },
 });
 
