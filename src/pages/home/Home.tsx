@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   FormControl,
-  FormHelperText,
   MenuItem,
   TextField,
   useMediaQuery,
@@ -14,8 +13,6 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import gsap from 'gsap';
 import HomeLoader from './../loader/HomeLoader';
-import ActionButtons from './../../components/buttons/ActionButtons';
-import OptionsModal from './../../components/modals/OptionsModal';
 import QuestionsModal from './../../components/modals/QuestionsModal';
 
 function Home() {
@@ -131,7 +128,7 @@ function Home() {
       <QuestionsModal
         handleClose={() => setOpenModal(false)}
         openModal={openModal}
-        tod={'dare'}
+        tod={'truth'}
       />
     </>
   );

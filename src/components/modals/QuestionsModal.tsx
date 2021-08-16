@@ -42,7 +42,7 @@ function QuestionsModal(props: IModalProps) {
 
   const classes = useStyles();
   const questions = useAppSelector((state) => state.questions.questions);
-  const [tod, setTod] = useState(props.tod);
+
   const [selectedQuestion, setSelectedQuestion] = useState('');
   return (
     <div>
@@ -80,6 +80,7 @@ function QuestionsModal(props: IModalProps) {
                   label={props.tod !== undefined && props.tod.toUpperCase()}
                   variant="outlined"
                   multiline
+                  rows={4}
                 />
               )}
             />
