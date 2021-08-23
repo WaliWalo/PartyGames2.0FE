@@ -13,12 +13,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import gsap from 'gsap';
 import HomeLoader from './../loader/HomeLoader';
-import QuestionsModal from './../../components/modals/QuestionsModal';
+// import QuestionsModal from './../../components/modals/QuestionsModal';
+import Messages from './../../components/messages/Messages';
 
 function Home() {
   const matches = useMediaQuery('(max-width: 426px)');
   const [game, setGame] = useState('Truth or Dare');
-  const [openModal, setOpenModal] = useState(false);
+  // const [openModal, setOpenModal] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setGame(event.target.value as string);
@@ -79,11 +80,7 @@ function Home() {
                     required
                   />
                 </div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setOpenModal(true)}
-                >
+                <Button variant="contained" color="primary">
                   {matches ? <ExitToAppIcon fontSize="large" /> : 'Join Room'}
                 </Button>
               </form>
@@ -125,11 +122,12 @@ function Home() {
           </div>
         </div>
       </div>
-      <QuestionsModal
+      <Messages />
+      {/* <QuestionsModal
         handleClose={() => setOpenModal(false)}
         openModal={openModal}
         tod={'truth'}
-      />
+      /> */}
     </>
   );
 }
