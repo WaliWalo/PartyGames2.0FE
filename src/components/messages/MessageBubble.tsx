@@ -2,6 +2,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
 import './messageBubble.css';
 import { IMessageBubbleProps } from './types';
+import 'typeface-fredoka-one';
 
 function MessageBubble(props: IMessageBubbleProps) {
   const useStyles = makeStyles((theme: Theme) =>
@@ -18,27 +19,33 @@ function MessageBubble(props: IMessageBubbleProps) {
       },
       usernameContainer: {
         marginLeft: '1.5em',
-        fontSize: '1em',
-        '@media (min-width:600px)': {
-          fontSize: '1.5rem',
-        },
+        fontSize: '1.2em',
+        textTransform: 'capitalize',
+        // '@media (min-width:600px)': {
+        //   fontSize: '1.5rem',
+        // },
       },
       bubbleSenderContainer: {
         width: '50%',
-        backgroundColor: 'blue',
+        backgroundColor: '#e5e5e5',
         margin: '0 1em 1em 1em',
         borderRadius: '5em',
         padding: '0.5em',
+        border: 'solid 1px',
       },
       bubbleReceiveContainer: {
         width: '50%',
-        backgroundColor: 'green',
+        backgroundColor: '#fee440',
         margin: '0 1em 1em 1em',
         borderRadius: '5em',
+        border: 'solid 1px',
         padding: '0.5em',
       },
       textMsg: {
         wordWrap: 'break-word',
+        fontSize: '1.2em',
+        marginLeft: '0.5em',
+        fontFamily: 'Fredoka One',
       },
     })
   );
@@ -51,7 +58,7 @@ function MessageBubble(props: IMessageBubbleProps) {
     >
       {!props.sender && (
         <div className={classes.usernameContainer}>
-          <span>user</span>
+          <strong>user</strong>
         </div>
       )}
 

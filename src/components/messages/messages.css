@@ -1,7 +1,14 @@
 .messageContainer {
   height: 100vh;
   width: 35vw;
-  background-color: white;
+  background-image: linear-gradient(
+    to top,
+    #7400b8,
+    #0073fb,
+    #00abff,
+    #00d9ee,
+    #80ffdb
+  );
   border: solid 2px;
   position: absolute;
   z-index: 100;
@@ -15,47 +22,13 @@
   overflow-y: scroll;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .inputsContainer {
   height: 7.2%;
   width: 100%;
   display: flex;
-}
-
-.textContainer {
-  width: 70%;
-  height: 100%;
-}
-
-.textContainer div.MuiFormControl-root {
-  /* height: 100%; */
-  width: 100%;
-}
-
-.textContainer div.MuiFormControl-root label.MuiFormLabel-root {
-  font-size: 1.5rem !important;
-}
-
-.textContainer div.MuiFormControl-root div.MuiInputBase-root {
-  font-size: 1.5rem !important;
-}
-
-.imageInputContainer,
-.enterInputContainer {
-  width: 20%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.imageInputContainer > button,
-.enterInputContainer > button {
-  width: 100%;
-  height: 100%;
-}
-
-.imageInputContainer > button svg,
-.enterInputContainer > button svg {
-  width: 80%;
-  height: 80%;
+  padding: 0.5rem;
 }
