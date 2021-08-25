@@ -15,6 +15,7 @@ import gsap from 'gsap';
 import HomeLoader from './../loader/HomeLoader';
 // import QuestionsModal from './../../components/modals/QuestionsModal';
 import Messages from './../../components/messages/Messages';
+import Scoreboard from './../../components/scoreboard/Scoreboard';
 
 function Home() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -122,6 +123,20 @@ function Home() {
           </div>
         </div>
       </div>
+      {/* <Scoreboard
+        users={[
+          {
+            _id: 'string',
+            score: 10,
+            name: 'afdsafdasfasfdsfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+            creator: true,
+            turn: true,
+            createdAt: new Date('1995-12-17T03:24:00'),
+            updatedAt: new Date('1995-12-17T03:24:00'),
+            answer: 'afdsafdasfasfdsfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+          },
+        ]}
+      /> */}
       <Messages />
       {/* <QuestionsModal
         handleClose={() => setOpenModal(false)}
