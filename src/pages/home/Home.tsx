@@ -16,6 +16,7 @@ import HomeLoader from './../loader/HomeLoader';
 // import QuestionsModal from './../../components/modals/QuestionsModal';
 import Messages from './../../components/messages/Messages';
 import Scoreboard from './../../components/scoreboard/Scoreboard';
+import Roulette from './../../components/roulette/Roulette';
 
 function Home() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -123,6 +124,7 @@ function Home() {
           </div>
         </div>
       </div>
+      <Roulette users={['abc', 'cde']} />
       {/* <Scoreboard
         users={[
           {
@@ -137,7 +139,7 @@ function Home() {
           },
         ]}
       /> */}
-      <Messages />
+      {/* <Messages /> */}
       {/* <QuestionsModal
         handleClose={() => setOpenModal(false)}
         openModal={openModal}
