@@ -6,7 +6,7 @@ import SingleUser from './SingleUser';
 
 const useStyles = makeStyles({
   rouletteContainer: {
-    backgroundColor: 'black',
+    // backgroundColor: 'black',
     height: '30vw',
     width: '30vw',
     position: 'absolute',
@@ -26,6 +26,8 @@ const useStyles = makeStyles({
     position: 'absolute',
     transform: 'rotate(180deg)',
     top: '-1em',
+    zIndex: 50,
+    right: '46%',
   },
 });
 
@@ -34,11 +36,15 @@ function Roulette(props: IRouletteProps) {
 
   return (
     <div className={classes.rouletteContainer}>
+      <div className={classes.arrow}>
+        <NavigationIcon fontSize="large" />
+      </div>
       <div className={classes.rouletteInnerContainer}>
-        <div className={classes.arrow}>
-          <NavigationIcon fontSize="large" />
-        </div>
-        <SingleUser numOfUsers={props.users.length} />
+        {props.users.length > 0 &&
+          props.users.map((user, index) => {
+            const degree = (360 / props.users.length) * index;
+            return <SingleUser degree={degree} name={user} />;
+          })}
       </div>
     </div>
   );

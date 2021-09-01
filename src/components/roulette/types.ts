@@ -3,5 +3,6 @@ export interface IRouletteProps {
 }
 
 export interface ISingleUserProps {
-  numOfUsers: number;
+  degree: number;
+  name: string;
 }
