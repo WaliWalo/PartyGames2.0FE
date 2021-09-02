@@ -124,18 +124,17 @@ function Home() {
           </div>
         </div>
       </div>
-      <Roulette
+      {/* <Roulette
         users={[
-          'Rebecca',
+          'Rebeccaasdas dasdadsadasdsad',
           'Charlotte',
-          'Veronica',
-          'Wilson',
-          'Rebecca',
           'Charlotte',
-          'Veronica',
-          'Wilson',
+          'Charlotte',
+          'Charlotte',
+          'Charlotte',
+          'Charlotte',
         ]}
-      />
+      /> */}
       {/* <Scoreboard
         users={[
           {

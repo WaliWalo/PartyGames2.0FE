@@ -13,7 +13,6 @@ function SingleUser(props: ISingleUserProps) {
       width: '100%',
     },
     texts: {
-      padding: '5em',
       fontFamily: 'Fredoka One',
     },
   });
@@ -30,14 +29,15 @@ function SingleUser(props: ISingleUserProps) {
         fill="black"
       >
         <path id="MyPath" fill="none" stroke="white" d="M 50 50 L 50 0" />
-        <text className={classes.texts} y="10">
+        <text className={classes.texts}>
           <textPath
             href="#MyPath"
             font-size={matches ? '5' : '5'}
-            startOffset="10"
-            textLength="7em"
-            spacing="auto"
+            startOffset="5"
+            textLength="40%"
+            // spacing="auto"
             alignment-baseline="text-before-edge"
+            lengthAdjust="spacingAndGlyphs"
           >
             {props.name}
           </textPath>
