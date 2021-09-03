@@ -17,6 +17,7 @@ import HomeLoader from './../loader/HomeLoader';
 import Messages from './../../components/messages/Messages';
 import Scoreboard from './../../components/scoreboard/Scoreboard';
 import Roulette from './../../components/roulette/Roulette';
+import Bar from './../../components/bar/Bar';
 
 function Home() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -124,6 +125,7 @@ function Home() {
           </div>
         </div>
       </div>
+      <Bar height={50} />
       {/* <Roulette
         users={[
           'Rebeccaasdas dasdadsadasdsad',
