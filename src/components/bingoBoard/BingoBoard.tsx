@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import {
   makeStyles,
@@ -68,7 +68,7 @@ function BingoBoard() {
       minWidth: '100%',
     },
     cellOnClick: {
-      backgroundColor: '#FBFF12',
+      backgroundColor: '#FBFF12 !important',
       fontSize: '1.5vw',
       fontFamily: 'Fredoka One',
       textAlign: 'center',
@@ -77,10 +77,16 @@ function BingoBoard() {
         cursor: 'pointer',
       },
     },
+    bingo: {
+      backgroundColor: '#04e762 !important',
+      fontSize: '1.5vw',
+      fontFamily: 'Bangers',
+      textAlign: 'center',
+    },
   });
 
   const classes = useStyles();
-
+  const header = useRef<HTMLTableRowElement>(null);
   // for displaying the board
   const [displayBoard, setDisplayBoard] = useState<
     Array<Array<Number | String>>
@@ -104,24 +110,41 @@ function BingoBoard() {
   }, []);
 
   useEffect(() => {
-    console.log(rowNumbers);
-  }, [rowNumbers]);
+    colNumbers.forEach((col, index) => {
+      if (col.length === 1) {
+        if (header.current !== null) {
+          header.current.children[index + 1].classList.add(classes.bingo);
+        }
+      }
+    });
+    // eslint-disable-next-line
+  }, [colNumbers]);
 
   const onClickNumber = (e: React.MouseEvent<HTMLElement>) => {
-    !isNaN(parseInt(e.currentTarget.innerText)) &&
+    if (!isNaN(parseInt(e.currentTarget.innerText))) {
       e.currentTarget.setAttribute(
         'style',
         'background-color:#FBFF12;font-size: 1.5vw;fontFamily: Fredoka One;textAlign: center'
       );
 
-    let rows = rowNumbers.slice();
-    rows.forEach((row, index) => {
-      const newRow = row.filter(
-        (rowNumber) => rowNumber !== parseInt(e.currentTarget.innerText)
-      );
-      rows[index] = newRow;
-    });
-    setRowNumbers(rows);
+      let rows = rowNumbers.slice();
+      rows.forEach((row, index) => {
+        const newRow = row.filter(
+          (rowNumber) => rowNumber !== parseInt(e.currentTarget.innerText)
+        );
+        rows[index] = newRow;
+      });
+      setRowNumbers(rows);
+
+      let cols = colNumbers.slice();
+      cols.forEach((col, index) => {
+        const newCol = col.filter(
+          (colNumber) => colNumber !== parseInt(e.currentTarget.innerText)
+        );
+        cols[index] = newCol;
+      });
+      setColNumbers(cols);
+    }
   };
 
   return (
@@ -129,7 +152,7 @@ function BingoBoard() {
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
-            <StyledTableRow>
+            <StyledTableRow ref={header}>
               <StyledTableCell></StyledTableCell>
               <StyledTableCell>B</StyledTableCell>
               <StyledTableCell>I</StyledTableCell>
@@ -139,19 +162,37 @@ function BingoBoard() {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {displayBoard.map((number, index) => (
+            {displayBoard.map((row, index) => (
               <StyledTableRow key={index}>
-                {number.map((number, index) => (
-                  <StyledTableCell
-                    key={index}
-                    onClick={(e: React.MouseEvent<HTMLElement>) =>
-                      onClickNumber(e)
+                {row.map((cell, index) => {
+                  let bingo: boolean = false;
+                  let alphabets: Array<String | Number> = [];
+                  rowNumbers.forEach((row) => {
+                    if (row.length === 1) {
+                      bingo = true;
+                      alphabets.push(row[0]);
                     }
-                    // classes={{ body: classes.cellOnClick }}
-                  >
-                    {number}
-                  </StyledTableCell>
-                ))}
+                  });
+                  return (
+                    <StyledTableCell
+                      id={`${cell}`}
+                      key={index}
+                      onClick={(e: React.MouseEvent<HTMLElement>) =>
+                        onClickNumber(e)
+                      }
+                      className={
+                        bingo &&
+                        typeof cell === 'string' &&
+                        alphabets.includes(cell)
+                          ? classes.bingo
+                          : classes.table
+                      }
+                      // classes={{ body: classes.cellOnClick }}
+                    >
+                      {cell}
+                    </StyledTableCell>
+                  );
+                })}
               </StyledTableRow>
             ))}
           </TableBody>
