@@ -19,8 +19,10 @@ import Scoreboard from './../../components/scoreboard/Scoreboard';
 import Roulette from './../../components/roulette/Roulette';
 import Bar from './../../components/bar/Bar';
 import BingoBoard from './../../components/bingoBoard/BingoBoard';
+import { useHistory } from 'react-router-dom';
 
 function Home() {
+  const history = useHistory();
   const matches = useMediaQuery('(max-width: 426px)');
   const [game, setGame] = useState('Truth or Dare');
   // const [openModal, setOpenModal] = useState(false);
@@ -84,7 +86,11 @@ function Home() {
                     required
                   />
                 </div>
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => history.push('/lobby/test')}
+                >
                   {matches ? <ExitToAppIcon fontSize="large" /> : 'Join Room'}
                 </Button>
               </form>
@@ -126,7 +132,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <BingoBoard />
+      {/* <BingoBoard /> */}
       {/* <Bar height={50} /> */}
       {/* <Roulette
         users={[

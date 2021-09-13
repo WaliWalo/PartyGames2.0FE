@@ -6,6 +6,8 @@ import { getUserAsync } from './store/user/userSlice';
 import { getRoomAsync } from './store/room/roomSlice';
 import Home from './pages/home/Home';
 import { getQuestionsAsync } from './store/questions/questionsSlice';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Lobby from './pages/lobby/Lobby';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -20,7 +22,14 @@ function App() {
 
   return (
     <div>
-      <Home />
+      <Router>
+        <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path="/lobby/:roomId" exact>
+          <Lobby />
+        </Route>
+      </Router>
     </div>
   );
 }
