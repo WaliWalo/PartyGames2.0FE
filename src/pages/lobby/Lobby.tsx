@@ -1,5 +1,5 @@
-import React, { MouseEventHandler, useEffect } from 'react';
-import { Collapse, IconButton, makeStyles } from '@material-ui/core';
+import React, { useEffect, useRef } from 'react';
+import { makeStyles, useMediaQuery } from '@material-ui/core';
 import gsap from 'gsap/all';
 import 'typeface-fredoka-one';
 import 'typeface-bangers';
@@ -54,7 +54,7 @@ function Lobby() {
       padding: '1em',
       overflowWrap: 'anywhere',
       '&:hover': {
-        cursor: 'pointer',
+        cursor: 'default',
       },
     },
     collide: {
@@ -62,23 +62,25 @@ function Lobby() {
     },
     infoAlert: { width: '20%', padding: '1em' },
     movingContainer: {
-      height: '2em',
-      width: '2em',
+      height: '50px',
+      width: '50px',
       position: 'absolute',
       borderRadius: '100%',
       backgroundColor:
         nameBgColors[Math.floor(Math.random() * nameBgColors.length)],
       border: 'solid 5px',
+      left: '0',
     },
-    inputTest: {
+    input: {
       opacity: 0,
       position: 'absolute',
       bottom: '0',
       zIndex: 0,
+      cursor: 'default',
     },
   });
 
-  const [openAlert, setOpenAlert] = React.useState(true);
+  const matches = useMediaQuery('(max-width: 426px)');
   const classes = useStyles();
   const names = ['REBECCA', 'very', 'cute'];
   const namesElement: HTMLCollectionOf<Element> =
@@ -120,7 +122,7 @@ function Lobby() {
 
   useEffect(() => {
     gsap.to(`.${classes.movingContainer}`, {
-      right: '0',
+      left: window.innerWidth - 50,
       duration: 3,
       repeat: -1,
       yoyo: true,
@@ -155,7 +157,7 @@ function Lobby() {
     // check if its touching name container
     // when coming back down do the same
     gsap.to(`.${classes.movingContainer}`, {
-      y: -window.innerHeight,
+      y: -window.innerHeight + 50,
       duration: 3,
       onUpdate: function () {
         for (let i = 0; i < namesElement.length; i++) {
@@ -177,8 +179,15 @@ function Lobby() {
     });
   };
 
+  const alertEl = useRef<HTMLDivElement>(null);
+  const closeAlert = () => {
+    if (alertEl.current !== null) {
+      alertEl.current.style.display = 'none';
+    }
+  };
+
   return (
-    <div className={classes.container} onClick={moveBall}>
+    <div className={classes.container} onClick={matches ? moveBall : () => {}}>
       <div className={classes.roomIdContainer}>
         <span>ROOMID</span>
       </div>
@@ -196,29 +205,24 @@ function Lobby() {
           </div>
         ))}
       </div>
-      <div className={classes.infoAlert}>
-        <Collapse in={openAlert}>
-          <Alert
-            variant="outlined"
-            severity="info"
-            onClose={() => {
-              setOpenAlert(false);
-            }}
-          >
-            Hit Space
-          </Alert>
-        </Collapse>
+      <div className={classes.infoAlert} ref={alertEl}>
+        <Alert variant="outlined" severity="info" onClose={closeAlert}>
+          {!matches ? 'Hit Space' : 'Tap on screen'}
+        </Alert>
       </div>
       <div className={classes.movingContainer}>
-        <input
-          autoFocus
-          className={classes.inputTest}
-          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
-            containerOnKeyPress(e)
-          }
-          value=""
-          onBlur={(e) => e.currentTarget.focus()}
-        ></input>
+        {!matches && (
+          <input
+            autoFocus
+            className={classes.input}
+            onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
+              containerOnKeyPress(e)
+            }
+            value=""
+            readOnly
+            onBlur={(e) => e.currentTarget.focus()}
+          ></input>
+        )}
       </div>
     </div>
   );
