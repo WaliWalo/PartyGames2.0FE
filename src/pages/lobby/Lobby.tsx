@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { makeStyles, useMediaQuery } from '@material-ui/core';
+import { makeStyles, useMediaQuery, Grid } from '@material-ui/core';
 import gsap from 'gsap/all';
 import 'typeface-fredoka-one';
 import 'typeface-bangers';
 import { Alert } from '@material-ui/lab';
+import './lobby.css';
 
 function Lobby() {
+  const matches = useMediaQuery('(max-width: 426px)');
   const nameBgColors = [
     '#ff0aba',
     '#00ffcc',
@@ -29,18 +31,13 @@ function Lobby() {
       alignItems: 'center',
       height: '30%',
       fontFamily: 'Bangers',
-      fontSize: '8em',
+      fontSize: matches ? '5em' : '9vw',
     },
     namesContainer: {
       height: '70%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
     },
     name: {
       height: 'fit-content',
-      width: '3em',
-      margin: '0 2em 2em 2em',
       borderRadius: '2em',
       textAlign: 'center',
       writingMode: 'vertical-lr',
@@ -50,8 +47,7 @@ function Lobby() {
       alignItems: 'center',
       fontFamily: 'Fredoka One',
       textTransform: 'uppercase',
-      fontSize: '1.5em',
-      padding: '1em',
+      fontSize: matches ? '1.5em' : '3vw',
       overflowWrap: 'anywhere',
       '&:hover': {
         cursor: 'default',
@@ -60,7 +56,18 @@ function Lobby() {
     collide: {
       backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
     },
-    infoAlert: { width: '20%', padding: '1em' },
+    infoAlert: { display: 'flex', justifyContent: 'center' },
+    startBtnContainer: {
+      position: 'absolute',
+      left: '50%',
+      bottom: '8%',
+      transform: 'translate(-50%, -50%)',
+      '& button': {
+        '& span:last-child': {
+          fontSize: matches ? '1.5em' : '3vw',
+        },
+      },
+    },
     movingContainer: {
       height: '50px',
       width: '50px',
@@ -80,9 +87,8 @@ function Lobby() {
     },
   });
 
-  const matches = useMediaQuery('(max-width: 426px)');
   const classes = useStyles();
-  const names = ['REBECCA', 'very', 'cute'];
+  const names = ['REBECCA', 'very', 'cute', 'cute'];
   const namesElement: HTMLCollectionOf<Element> =
     document.getElementsByClassName(`${classes.name}`);
 
@@ -191,9 +197,17 @@ function Lobby() {
       <div className={classes.roomIdContainer}>
         <span>ROOMID</span>
       </div>
-      <div className={classes.namesContainer}>
+      <Grid
+        container
+        spacing={3}
+        className={classes.namesContainer}
+        direction="row"
+        justifyContent="space-around"
+        alignItems="center"
+      >
         {names.map((name, index) => (
-          <div
+          <Grid
+            item
             className={classes.name}
             id={`user${index}`}
             style={{
@@ -202,8 +216,15 @@ function Lobby() {
             }}
           >
             {name}
-          </div>
+          </Grid>
         ))}
+      </Grid>
+      <div className={classes.startBtnContainer}>
+        <button className="pushable">
+          <span className="shadow"></span>
+          <span className="edge"></span>
+          <span className="front">START</span>
+        </button>
       </div>
       <div className={classes.infoAlert} ref={alertEl}>
         <Alert variant="outlined" severity="info" onClose={closeAlert}>
