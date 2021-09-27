@@ -8,7 +8,6 @@ import Home from './pages/home/Home';
 import { getQuestionsAsync } from './store/questions/questionsSlice';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Lobby from './pages/lobby/Lobby';
-
 function App() {
   const dispatch = useAppDispatch();
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import {
   Button,
   FormControl,
@@ -25,6 +25,7 @@ function Home() {
   const history = useHistory();
   const matches = useMediaQuery('(max-width: 426px)');
   const [game, setGame] = useState('Truth or Dare');
+  const [createUser, setCreateUser] = useState('');
   // const [openModal, setOpenModal] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -52,6 +53,10 @@ function Home() {
       },
     });
   }, [matches]);
+
+  const createRoomSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
 
   return (
     <>
@@ -97,7 +102,11 @@ function Home() {
             </div>
             <hr />
             <div className="create-room">
-              <form>
+              <form
+                onSubmit={(e: FormEvent<HTMLFormElement>) =>
+                  createRoomSubmit(e)
+                }
+              >
                 <div className="create-fields">
                   <TextField
                     id="filled-basic-username"
@@ -105,6 +114,8 @@ function Home() {
                     variant="filled"
                     size="medium"
                     required
+                    value={createUser}
+                    onChange={(e) => setCreateUser(e.currentTarget.value)}
                   />
                   <FormControl required>
                     <InputLabel id="select-helper-label">Game type</InputLabel>
@@ -124,7 +135,7 @@ function Home() {
                     </Select>
                   </FormControl>
                 </div>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" type="submit">
                   {matches ? <AddBoxIcon fontSize="large" /> : 'Create Room'}
                 </Button>
               </form>

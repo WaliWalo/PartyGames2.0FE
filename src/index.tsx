@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from "react-redux";
-import store from "./store/setup/store";
+import { Provider } from 'react-redux';
+import store from './store/setup/store';
+import { socket_init } from './utilities/socketApi';
+
+socket_init();
 
 ReactDOM.render(
   <Provider store={store}>
