@@ -20,6 +20,7 @@ import Roulette from './../../components/roulette/Roulette';
 import Bar from './../../components/bar/Bar';
 import BingoBoard from './../../components/bingoBoard/BingoBoard';
 import { useHistory } from 'react-router-dom';
+import socket from './../../utilities/socketApi';
 
 function Home() {
   const history = useHistory();
@@ -27,7 +28,6 @@ function Home() {
   const [game, setGame] = useState('Truth or Dare');
   const [createUser, setCreateUser] = useState('');
   // const [openModal, setOpenModal] = useState(false);
-
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setGame(event.target.value as string);
   };
@@ -56,6 +56,7 @@ function Home() {
 
   const createRoomSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    socket.emit('createRoom', { userName: createUser, roomType: game });
   };
 
   return (

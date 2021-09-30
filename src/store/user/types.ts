@@ -7,4 +7,5 @@ export interface IUser {
   createdAt: Date;
   updatedAt: Date;
   answer: string;
+  socketId: string;
 }
