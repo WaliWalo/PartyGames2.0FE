@@ -21,38 +21,42 @@ import Bar from './../../components/bar/Bar';
 import BingoBoard from './../../components/bingoBoard/BingoBoard';
 import { useHistory } from 'react-router-dom';
 import socket from './../../utilities/socketApi';
+import { useAppSelector } from './../../store/setup/store';
 
 function Home() {
   const history = useHistory();
   const matches = useMediaQuery('(max-width: 426px)');
   const [game, setGame] = useState('Truth or Dare');
   const [createUser, setCreateUser] = useState('');
+  const roomState = useAppSelector((state) => state.room);
+
   // const [openModal, setOpenModal] = useState(false);
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setGame(event.target.value as string);
   };
 
   useEffect(() => {
-    gsap.to('#party', {
-      x: '130%',
-      duration: 1.5,
-      ease: 'bounce.out',
-      onComplete: () => {
-        gsap.to('#games', {
-          x: '150%',
-          duration: 1.5,
-          ease: 'bounce.out',
-          onComplete: () => {
-            gsap.to('#homeLoader', {
-              opacity: 0,
-              display: 'none',
-              duration: 1,
-            });
-          },
-        });
-      },
-    });
-  }, [matches]);
+    !roomState.inRoom &&
+      gsap.to('#party', {
+        x: '130%',
+        duration: 1.5,
+        ease: 'bounce.out',
+        onComplete: () => {
+          gsap.to('#games', {
+            x: '150%',
+            duration: 1.5,
+            ease: 'bounce.out',
+            onComplete: () => {
+              gsap.to('#homeLoader', {
+                opacity: 0,
+                display: 'none',
+                duration: 1,
+              });
+            },
+          });
+        },
+      });
+  }, [matches, roomState]);
 
   const createRoomSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

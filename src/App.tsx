@@ -6,7 +6,7 @@ import { getUserAsync, setUser } from './store/user/userSlice';
 import { getRoomAsync, setRoom } from './store/room/roomSlice';
 import Home from './pages/home/Home';
 import { getQuestionsAsync } from './store/questions/questionsSlice';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom';
 import Lobby from './pages/lobby/Lobby';
 import socket from './utilities/socketApi';
 import { ISocketIdType } from './utilities/types';
@@ -14,9 +14,9 @@ function App() {
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.user);
   const roomState = useAppSelector((state) => state.room);
+  const history = useHistory();
 
   useEffect(() => {
-    localStorage.setItem('userId', '60c751315d4513378053af08');
     dispatch(getUserAsync());
     dispatch(getRoomAsync());
     dispatch(getQuestionsAsync());
@@ -36,23 +36,28 @@ function App() {
         })
       );
     });
+
     userState.user?.socketId !== undefined &&
       socket.on(userState.user?.socketId, (data: ISocketIdType) => {
-        data.status === 'ok' && dispatch(setRoom(data.data));
+        if (data.status === 'ok') {
+          dispatch(setRoom(data.data));
+          localStorage.setItem('userId', data.data.users[0]);
+          dispatch(getUserAsync());
+        }
       });
+    roomState.inRoom && history.push(`/lobby/${roomState.room._id}`);
+
     // eslint-disable-next-line
-  }, [userState]);
+  }, [userState, roomState]);
 
   return (
     <div>
-      <Router>
-        <Route path="/" exact>
-          <Home />
-        </Route>
-        <Route path="/lobby/:roomId" exact>
-          <Lobby />
-        </Route>
-      </Router>
+      <Route path="/" exact>
+        <Home />
+      </Route>
+      <Route path="/lobby/:roomId" exact>
+        <Lobby />
+      </Route>
     </div>
   );
 }

@@ -6,12 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store/setup/store';
 import { socket_init } from './utilities/socketApi';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 socket_init();
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </Provider>,
   document.getElementById('root')
 );

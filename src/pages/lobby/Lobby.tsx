@@ -5,6 +5,8 @@ import 'typeface-fredoka-one';
 import 'typeface-bangers';
 import { Alert } from '@material-ui/lab';
 import './lobby.css';
+import { useAppSelector } from './../../store/setup/store';
+import { IUser } from './../../store/user/types';
 
 function Lobby() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -88,7 +90,11 @@ function Lobby() {
   });
 
   const classes = useStyles();
-  const names = ['REBECCA', 'very', 'cute', 'cute'];
+  const roomState = useAppSelector((state) => state.room);
+  const names = roomState.inRoom
+    ? roomState.room?.users?.map((user: IUser) => user.name)
+    : ['empty room'];
+
   const namesElement: HTMLCollectionOf<Element> =
     document.getElementsByClassName(`${classes.name}`);
 
@@ -195,7 +201,7 @@ function Lobby() {
   return (
     <div className={classes.container} onClick={matches ? moveBall : () => {}}>
       <div className={classes.roomIdContainer}>
-        <span>ROOMID</span>
+        <span>{roomState.inRoom ? roomState.room.roomName : 'ROOMID'}</span>
       </div>
       <Grid
         container
@@ -205,7 +211,7 @@ function Lobby() {
         justifyContent="space-around"
         alignItems="center"
       >
-        {names.map((name, index) => (
+        {names.map((name: string, index: number) => (
           <Grid
             item
             className={classes.name}
@@ -214,6 +220,7 @@ function Lobby() {
               backgroundColor:
                 nameBgColors[Math.floor(Math.random() * nameBgColors.length)],
             }}
+            key={`user${index}`}
           >
             {name}
           </Grid>
