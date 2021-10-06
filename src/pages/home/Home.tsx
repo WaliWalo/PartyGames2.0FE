@@ -21,15 +21,25 @@ import Bar from './../../components/bar/Bar';
 import BingoBoard from './../../components/bingoBoard/BingoBoard';
 import { useHistory } from 'react-router-dom';
 import socket from './../../utilities/socketApi';
-import { useAppSelector } from './../../store/setup/store';
+import { useAppDispatch, useAppSelector } from './../../store/setup/store';
+import { IJoinRoomSocket } from './types';
+import { getUserAsync } from './../../store/user/userSlice';
+import { getRoomAsync } from './../../store/room/roomSlice';
 
 function Home() {
-  const history = useHistory();
   const matches = useMediaQuery('(max-width: 426px)');
   const [game, setGame] = useState('Truth or Dare');
   const [createUser, setCreateUser] = useState('');
+  const [joinUser, setJoinUser] = useState('');
+  const [roomName, setRoomName] = useState('');
   const roomState = useAppSelector((state) => state.room);
+  const dispatch = useAppDispatch();
 
+  socket.on('joinRoom', (data: IJoinRoomSocket) => {
+    data.userId !== undefined && localStorage.setItem('userId', data.userId);
+    dispatch(getUserAsync());
+    dispatch(getRoomAsync());
+  });
   // const [openModal, setOpenModal] = useState(false);
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setGame(event.target.value as string);
@@ -63,6 +73,11 @@ function Home() {
     socket.emit('createRoom', { userName: createUser, roomType: game });
   };
 
+  const joinRoomSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    socket.emit('joinRoom', { userName: joinUser, roomName });
+  };
+
   return (
     <>
       <HomeLoader />
@@ -79,7 +94,9 @@ function Home() {
           </div>
           <div className="home-form">
             <div className="join-room">
-              <form>
+              <form
+                onSubmit={(e: FormEvent<HTMLFormElement>) => joinRoomSubmit(e)}
+              >
                 <div className="create-fields">
                   <TextField
                     id="filled-basic-username"
@@ -87,6 +104,8 @@ function Home() {
                     variant="filled"
                     size="medium"
                     required
+                    value={joinUser}
+                    onChange={(e) => setJoinUser(e.currentTarget.value)}
                   />
                   <TextField
                     id="filled-basic-room-name"
@@ -94,13 +113,11 @@ function Home() {
                     variant="filled"
                     size="medium"
                     required
+                    value={roomName}
+                    onChange={(e) => setRoomName(e.currentTarget.value)}
                   />
                 </div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => history.push('/lobby/test')}
-                >
+                <Button variant="contained" color="primary" type="submit">
                   {matches ? <ExitToAppIcon fontSize="large" /> : 'Join Room'}
                 </Button>
               </form>

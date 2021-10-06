@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { makeStyles, useMediaQuery, Grid } from '@material-ui/core';
 import gsap from 'gsap/all';
 import 'typeface-fredoka-one';
 import 'typeface-bangers';
 import { Alert } from '@material-ui/lab';
 import './lobby.css';
-import { useAppSelector } from './../../store/setup/store';
+import { useAppDispatch, useAppSelector } from './../../store/setup/store';
 import { IUser } from './../../store/user/types';
+import socket from './../../utilities/socketApi';
+import { getRoomAsync } from './../../store/room/roomSlice';
 
 function Lobby() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -62,7 +64,7 @@ function Lobby() {
     startBtnContainer: {
       position: 'absolute',
       left: '50%',
-      bottom: '8%',
+      bottom: '0%',
       transform: 'translate(-50%, -50%)',
       '& button': {
         '& span:last-child': {
@@ -89,11 +91,12 @@ function Lobby() {
     },
   });
 
+  const dispatch = useAppDispatch();
   const classes = useStyles();
   const roomState = useAppSelector((state) => state.room);
   const names = roomState.inRoom
-    ? roomState.room?.users?.map((user: IUser) => user.name)
-    : ['empty room'];
+    ? roomState.room.users.map((user: IUser) => user.name)
+    : [];
 
   const namesElement: HTMLCollectionOf<Element> =
     document.getElementsByClassName(`${classes.name}`);
@@ -161,8 +164,9 @@ function Lobby() {
         yoyo: true,
       },
     });
+
     // eslint-disable-next-line
-  }, []);
+  }, [names]);
 
   const moveBall = () => {
     // on keypress space move .movingContainer up, while its moving run function isOverlap to
@@ -197,6 +201,14 @@ function Lobby() {
       alertEl.current.style.display = 'none';
     }
   };
+
+  useEffect(() => {
+    roomState.status === 'ok' &&
+      socket.on(roomState.room.roomName, (data: object) =>
+        dispatch(getRoomAsync())
+      );
+    // roomState.status === 'ok' && console.log(roomState.room.roomName);
+  }, [roomState]);
 
   return (
     <div className={classes.container} onClick={matches ? moveBall : () => {}}>

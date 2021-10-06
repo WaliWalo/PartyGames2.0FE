@@ -31,8 +31,9 @@ export const getRoomAsync = () => async (dispatch: AppDispatch) => {
       const response = await fetch(
         `${process.env.REACT_APP_BE_URL}/rooms/${userId}`
       );
+      const data = await response.json();
       if (response.ok) {
-        dispatch(setRoom(await response.json()));
+        dispatch(setRoom(data));
       } else {
         const err = { status: response.status, message: response.statusText };
         dispatch(setError(err));

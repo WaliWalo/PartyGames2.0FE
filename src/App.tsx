@@ -20,7 +20,6 @@ function App() {
     dispatch(getUserAsync());
     dispatch(getRoomAsync());
     dispatch(getQuestionsAsync());
-    socket.emit('userConnected', { userId: userState.user?._id });
 
     return function disconnect() {
       socket.disconnect();
@@ -37,14 +36,18 @@ function App() {
       );
     });
 
+    userState.status === 'ok' &&
+      socket.emit('userConnected', { userId: userState.user?._id });
+
     userState.user?.socketId !== undefined &&
       socket.on(userState.user?.socketId, (data: ISocketIdType) => {
         if (data.status === 'ok') {
           dispatch(setRoom(data.data));
-          localStorage.setItem('userId', data.data.users[0]);
+          localStorage.setItem('userId', data.data.users[0]._id);
           dispatch(getUserAsync());
         }
       });
+
     roomState.inRoom && history.push(`/lobby/${roomState.room._id}`);
 
     // eslint-disable-next-line
