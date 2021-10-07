@@ -97,7 +97,10 @@ function Lobby() {
   const names = roomState.inRoom
     ? roomState.room.users.map((user: IUser) => user.name)
     : [];
-
+  roomState.status === 'ok' &&
+    socket.on(roomState.room.roomName, (data: object) =>
+      dispatch(getRoomAsync())
+    );
   const namesElement: HTMLCollectionOf<Element> =
     document.getElementsByClassName(`${classes.name}`);
 
@@ -155,16 +158,16 @@ function Lobby() {
       ])`,
     });
 
-    gsap.to(`.${classes.name}`, {
-      y: '-2em',
-      stagger: {
-        each: 0.1,
-        ease: 'bounce.inOut(3.0)',
-        repeat: -1,
-        yoyo: true,
-      },
-    });
-
+    names.length > 0 &&
+      gsap.to(`.${classes.name}`, {
+        y: '-50px',
+        stagger: {
+          each: 0.1,
+          ease: 'bounce.inOut(3.0)',
+          repeat: -1,
+          yoyo: true,
+        },
+      });
     // eslint-disable-next-line
   }, [names]);
 
@@ -201,14 +204,6 @@ function Lobby() {
       alertEl.current.style.display = 'none';
     }
   };
-
-  useEffect(() => {
-    roomState.status === 'ok' &&
-      socket.on(roomState.room.roomName, (data: object) =>
-        dispatch(getRoomAsync())
-      );
-    // roomState.status === 'ok' && console.log(roomState.room.roomName);
-  }, [roomState]);
 
   return (
     <div className={classes.container} onClick={matches ? moveBall : () => {}}>

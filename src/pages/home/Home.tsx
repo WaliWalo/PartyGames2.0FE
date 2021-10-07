@@ -35,11 +35,6 @@ function Home() {
   const roomState = useAppSelector((state) => state.room);
   const dispatch = useAppDispatch();
 
-  socket.on('joinRoom', (data: IJoinRoomSocket) => {
-    data.userId !== undefined && localStorage.setItem('userId', data.userId);
-    dispatch(getUserAsync());
-    dispatch(getRoomAsync());
-  });
   // const [openModal, setOpenModal] = useState(false);
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setGame(event.target.value as string);
@@ -75,7 +70,10 @@ function Home() {
 
   const joinRoomSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.emit('joinRoom', { userName: joinUser, roomName });
+    socket.emit('joinRoom', {
+      userName: joinUser,
+      roomName: roomName.toUpperCase(),
+    });
   };
 
   return (

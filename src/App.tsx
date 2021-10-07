@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom';
 import Lobby from './pages/lobby/Lobby';
 import socket from './utilities/socketApi';
 import { ISocketIdType } from './utilities/types';
+import { IJoinRoomSocket } from './pages/home/types';
+
 function App() {
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.user);
@@ -20,7 +22,17 @@ function App() {
     dispatch(getUserAsync());
     dispatch(getRoomAsync());
     dispatch(getQuestionsAsync());
+    socket.on('joinRoom', (data: IJoinRoomSocket) => {
+      if (data.status === 'ok') {
+        data.userId !== undefined &&
+          localStorage.setItem('userId', data.userId);
 
+        dispatch(getUserAsync());
+        dispatch(getRoomAsync());
+      } else {
+        alert('room does not exist');
+      }
+    });
     return function disconnect() {
       socket.disconnect();
     };
@@ -39,6 +51,7 @@ function App() {
     userState.status === 'ok' &&
       socket.emit('userConnected', { userId: userState.user?._id });
 
+    // once user creates room this will happen
     userState.user?.socketId !== undefined &&
       socket.on(userState.user?.socketId, (data: ISocketIdType) => {
         if (data.status === 'ok') {
@@ -48,8 +61,9 @@ function App() {
         }
       });
 
-    roomState.inRoom && history.push(`/lobby/${roomState.room._id}`);
-
+    roomState.inRoom
+      ? history.push(`/lobby/${roomState.room._id}`)
+      : history.push(`/`);
     // eslint-disable-next-line
   }, [userState, roomState]);
 
