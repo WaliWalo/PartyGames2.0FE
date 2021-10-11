@@ -9,7 +9,7 @@ import {
   Theme,
   useMediaQuery,
 } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { IModalProps } from './types';
 import './modals.css';
 

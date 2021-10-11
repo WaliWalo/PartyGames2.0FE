@@ -9,6 +9,8 @@ import { useAppDispatch, useAppSelector } from './../../store/setup/store';
 import { IUser } from './../../store/user/types';
 import socket from './../../utilities/socketApi';
 import { getRoomAsync } from './../../store/room/roomSlice';
+import ActionButtons from './../../components/buttons/ActionButtons';
+import PlayersModal from './../../components/modals/PlayersModal';
 
 function Lobby() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -28,6 +30,12 @@ function Lobby() {
       display: 'flex',
       justifyContent: 'flex-end',
       flexDirection: 'column',
+    },
+    actionButtonsContainer: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      display: 'flex',
     },
     roomIdContainer: {
       display: 'flex',
@@ -94,13 +102,18 @@ function Lobby() {
   const dispatch = useAppDispatch();
   const classes = useStyles();
   const roomState = useAppSelector((state) => state.room);
+  const userState = useAppSelector((state) => state.user);
+  const [openModal, setOpenModal] = useState(false);
+
   const names = roomState.inRoom
     ? roomState.room.users.map((user: IUser) => user.name)
     : [];
+
   roomState.status === 'ok' &&
     socket.on(roomState.room.roomName, (data: object) =>
       dispatch(getRoomAsync())
     );
+
   const namesElement: HTMLCollectionOf<Element> =
     document.getElementsByClassName(`${classes.name}`);
 
@@ -169,7 +182,7 @@ function Lobby() {
         },
       });
     // eslint-disable-next-line
-  }, [names]);
+  }, [names, openModal]);
 
   const moveBall = () => {
     // on keypress space move .movingContainer up, while its moving run function isOverlap to
@@ -207,6 +220,18 @@ function Lobby() {
 
   return (
     <div className={classes.container} onClick={matches ? moveBall : () => {}}>
+      <div className={classes.actionButtonsContainer}>
+        {userState.user?.creator && (
+          <div onClick={() => setOpenModal(true)}>
+            <ActionButtons buttonType="kickPlayer" />
+          </div>
+        )}
+
+        <div>
+          <ActionButtons buttonType="leaveGame" />
+        </div>
+      </div>
+
       <div className={classes.roomIdContainer}>
         <span>{roomState.inRoom ? roomState.room.roomName : 'ROOMID'}</span>
       </div>
@@ -233,13 +258,15 @@ function Lobby() {
           </Grid>
         ))}
       </Grid>
-      <div className={classes.startBtnContainer}>
-        <button className="pushable">
-          <span className="shadow"></span>
-          <span className="edge"></span>
-          <span className="front">START</span>
-        </button>
-      </div>
+      {userState.user?.creator && (
+        <div className={classes.startBtnContainer}>
+          <button className="pushable">
+            <span className="shadow"></span>
+            <span className="edge"></span>
+            <span className="front">START</span>
+          </button>
+        </div>
+      )}
       <div className={classes.infoAlert} ref={alertEl}>
         <Alert variant="outlined" severity="info" onClose={closeAlert}>
           {!matches ? 'Hit Space' : 'Tap on screen'}
@@ -259,6 +286,10 @@ function Lobby() {
           ></input>
         )}
       </div>
+      <PlayersModal
+        handleClose={() => setOpenModal(false)}
+        openModal={openModal}
+      />
     </div>
   );
 }

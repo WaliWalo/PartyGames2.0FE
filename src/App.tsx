@@ -39,18 +39,18 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      dispatch(
-        setUser({
-          ...userState.user,
-          socketId: socket.id,
-        })
-      );
-    });
-
     userState.status === 'ok' &&
       socket.emit('userConnected', { userId: userState.user?._id });
 
+    userState.status === 'ok' &&
+      socket.on('connect', () => {
+        dispatch(
+          setUser({
+            ...userState.user,
+            socketId: socket.id,
+          })
+        );
+      });
     // once user creates room this will happen
     userState.user?.socketId !== undefined &&
       socket.on(userState.user?.socketId, (data: ISocketIdType) => {
