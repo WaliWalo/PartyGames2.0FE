@@ -42,15 +42,14 @@ function App() {
     userState.status === 'ok' &&
       socket.emit('userConnected', { userId: userState.user?._id });
 
-    userState.status === 'ok' &&
-      socket.on('connect', () => {
-        dispatch(
-          setUser({
-            ...userState.user,
-            socketId: socket.id,
-          })
-        );
-      });
+    socket.on('connect', () => {
+      dispatch(
+        setUser({
+          ...userState.user,
+          socketId: socket.id,
+        })
+      );
+    });
     // once user creates room this will happen
     userState.user?.socketId !== undefined &&
       socket.on(userState.user?.socketId, (data: ISocketIdType) => {
@@ -58,6 +57,15 @@ function App() {
           dispatch(setRoom(data.data));
           localStorage.setItem('userId', data.data.users[0]._id);
           dispatch(getUserAsync());
+        }
+      });
+
+    roomState.room &&
+      socket.on(roomState.room?.roomName, (data: ISocketIdType) => {
+        console.log(data);
+        if (data.status === 'end') {
+          localStorage.removeItem('userId');
+          history.push(`/`);
         }
       });
 

@@ -18,6 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { useAppSelector } from './../../store/setup/store';
 import { IUser } from './../../store/user/types';
 import './modals.css';
+import socket from './../../utilities/socketApi';
 
 function PlayersModal(props: IModalProps) {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -35,7 +36,7 @@ function PlayersModal(props: IModalProps) {
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: modalPadding,
-        borderRadius: '90px',
+        borderRadius: '5px',
         display: 'flex',
       },
       listContainer: {
@@ -49,9 +50,12 @@ function PlayersModal(props: IModalProps) {
 
   const classes = useStyles();
   const roomState = useAppSelector((state) => state.room);
-  const names = roomState.inRoom
-    ? roomState.room.users.map((user: IUser) => user.name)
-    : [];
+  const handleKick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    socket.emit('leaveRoom', {
+      userId: e.currentTarget.id.slice(6),
+      roomName: roomState.room.roomName,
+    });
+  };
 
   return (
     <div>
@@ -63,16 +67,26 @@ function PlayersModal(props: IModalProps) {
         <div className={classes.paper}>
           <div className={classes.listContainer}>
             <List>
-              {names.map((name: string, index: number) => (
-                <ListItem key={index}>
-                  <ListItemText primary={name} />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
+              {roomState.inRoom &&
+                roomState.room.users
+                  .filter((user: IUser) => !user.creator)
+                  .map((user: IUser, index: number) => (
+                    <ListItem key={index}>
+                      <ListItemText primary={user.name} />
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          id={`delBtn${user._id}`}
+                          onClick={(
+                            e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                          ) => handleKick(e)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
             </List>
           </div>
         </div>

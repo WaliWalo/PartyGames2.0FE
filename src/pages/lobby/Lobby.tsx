@@ -8,9 +8,11 @@ import './lobby.css';
 import { useAppDispatch, useAppSelector } from './../../store/setup/store';
 import { IUser } from './../../store/user/types';
 import socket from './../../utilities/socketApi';
-import { getRoomAsync } from './../../store/room/roomSlice';
+import { getRoomAsync, unsetRoom } from './../../store/room/roomSlice';
 import ActionButtons from './../../components/buttons/ActionButtons';
 import PlayersModal from './../../components/modals/PlayersModal';
+import { useDispatch } from 'react-redux';
+import { unsetUser } from '../../store/user/userSlice';
 
 function Lobby() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -170,7 +172,6 @@ function Lobby() {
         '#0540f1',
       ])`,
     });
-
     names.length > 0 &&
       gsap.to(`.${classes.name}`, {
         y: '-50px',
@@ -181,8 +182,7 @@ function Lobby() {
           yoyo: true,
         },
       });
-    // eslint-disable-next-line
-  }, [names, openModal]);
+  }, []);
 
   const moveBall = () => {
     // on keypress space move .movingContainer up, while its moving run function isOverlap to
@@ -212,22 +212,32 @@ function Lobby() {
   };
 
   const alertEl = useRef<HTMLDivElement>(null);
+
   const closeAlert = () => {
     if (alertEl.current !== null) {
       alertEl.current.style.display = 'none';
     }
   };
 
+  const handleLeaveGame = () => {
+    socket.emit(userState.user?.creator ? 'endGame' : 'leaveRoom', {
+      userId: userState.user._id,
+      roomName: roomState.room.roomName,
+    });
+    dispatch(unsetRoom);
+    dispatch(unsetUser);
+  };
+
   return (
     <div className={classes.container} onClick={matches ? moveBall : () => {}}>
       <div className={classes.actionButtonsContainer}>
-        {userState.user?.creator && (
+        {userState.user?.creator && roomState.inRoom.room.users.length > 1 && (
           <div onClick={() => setOpenModal(true)}>
             <ActionButtons buttonType="kickPlayer" />
           </div>
         )}
 
-        <div>
+        <div onClick={() => handleLeaveGame()}>
           <ActionButtons buttonType="leaveGame" />
         </div>
       </div>
@@ -282,7 +292,7 @@ function Lobby() {
             }
             value=""
             readOnly
-            onBlur={(e) => e.currentTarget.focus()}
+            onBlur={(e) => !openModal && e.currentTarget.focus()}
           ></input>
         )}
       </div>
