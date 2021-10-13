@@ -6,15 +6,12 @@ import SingleUser from './SingleUser';
 
 function Roulette(props: IRouletteProps) {
   const matches = useMediaQuery('(max-width: 426px)');
-  const rouletteDimension = matches ? '15em' : '40vw';
+  const rouletteDimension = matches ? '15em' : '30vw';
   const useStyles = makeStyles({
     rouletteContainer: {
-      // backgroundColor: 'black',
       height: rouletteDimension,
       width: rouletteDimension,
-      position: 'absolute',
-      right: '38%',
-      top: '30%',
+      // position: 'absolute',
     },
     rouletteInnerContainer: {
       height: '100%',
@@ -30,7 +27,6 @@ function Roulette(props: IRouletteProps) {
       transform: 'rotate(180deg)',
       top: '-1em',
       zIndex: 50,
-      right: '46%',
     },
   });
 
@@ -38,10 +34,10 @@ function Roulette(props: IRouletteProps) {
 
   return (
     <div className={classes.rouletteContainer}>
-      <div className={classes.arrow}>
-        <NavigationIcon fontSize="large" />
-      </div>
       <div className={classes.rouletteInnerContainer}>
+        <div className={classes.arrow}>
+          <NavigationIcon fontSize="large" />
+        </div>
         {props.users.length > 0 &&
           props.users.map((user, index) => {
             const degree = (360 / props.users.length) * index;

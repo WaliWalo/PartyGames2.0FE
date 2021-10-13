@@ -11,6 +11,7 @@ import Lobby from './pages/lobby/Lobby';
 import socket from './utilities/socketApi';
 import { ISocketIdType } from './utilities/types';
 import { IJoinRoomSocket } from './pages/home/types';
+import Tod from './pages/tod/Tod';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -62,8 +63,7 @@ function App() {
 
     roomState.room &&
       socket.on(roomState.room?.roomName, (data: ISocketIdType) => {
-        console.log(data);
-        if (data.status === 'end') {
+        if (data?.status === 'end') {
           localStorage.removeItem('userId');
           history.push(`/`);
         }
@@ -82,6 +82,9 @@ function App() {
       </Route>
       <Route path="/lobby/:roomId" exact>
         <Lobby />
+      </Route>
+      <Route path="/tod/:roomId" exact>
+        <Tod />
       </Route>
     </div>
   );

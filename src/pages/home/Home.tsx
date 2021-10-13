@@ -165,17 +165,7 @@ function Home() {
       </div>
       {/* <BingoBoard /> */}
       {/* <Bar height={50} /> */}
-      {/* <Roulette
-        users={[
-          'Rebeccaasdas dasdadsadasdsad',
-          'Charlotte',
-          'Charlotte',
-          'Charlotte',
-          'Charlotte',
-          'Charlotte',
-          'Charlotte',
-        ]}
-      /> */}
+
       {/* <Scoreboard
         users={[
           {
@@ -190,7 +180,6 @@ function Home() {
           },
         ]}
       /> */}
-      {/* <Messages /> */}
       {/* <QuestionsModal
         handleClose={() => setOpenModal(false)}
         openModal={openModal}

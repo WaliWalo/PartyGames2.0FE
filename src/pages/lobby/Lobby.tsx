@@ -13,6 +13,7 @@ import ActionButtons from './../../components/buttons/ActionButtons';
 import PlayersModal from './../../components/modals/PlayersModal';
 import { useDispatch } from 'react-redux';
 import { unsetUser } from '../../store/user/userSlice';
+import { useHistory } from 'react-router-dom';
 
 function Lobby() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -106,6 +107,7 @@ function Lobby() {
   const roomState = useAppSelector((state) => state.room);
   const userState = useAppSelector((state) => state.user);
   const [openModal, setOpenModal] = useState(false);
+  const history = useHistory();
 
   const names = roomState.inRoom
     ? roomState.room.users.map((user: IUser) => user.name)
@@ -154,6 +156,7 @@ function Lobby() {
   }
 
   useEffect(() => {
+    roomState?.room?.started && history.push(`/tod/${roomState.room._id}`);
     gsap.to(`.${classes.movingContainer}`, {
       left: window.innerWidth - 50,
       duration: 3,
@@ -231,7 +234,7 @@ function Lobby() {
   return (
     <div className={classes.container} onClick={matches ? moveBall : () => {}}>
       <div className={classes.actionButtonsContainer}>
-        {userState.user?.creator && roomState.inRoom.room.users.length > 1 && (
+        {userState.user?.creator && roomState.room.users.length > 1 && (
           <div onClick={() => setOpenModal(true)}>
             <ActionButtons buttonType="kickPlayer" />
           </div>

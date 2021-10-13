@@ -1,0 +1,139 @@
+import React, { useState } from 'react';
+import { makeStyles, useMediaQuery } from '@material-ui/core';
+import { useAppDispatch, useAppSelector } from './../../store/setup/store';
+import 'typeface-fredoka-one';
+import 'typeface-bangers';
+import ActionButtons from './../../components/buttons/ActionButtons';
+import socket from './../../utilities/socketApi';
+import { unsetRoom } from '../../store/room/roomSlice';
+import { unsetUser } from '../../store/user/userSlice';
+import Roulette from './../../components/roulette/Roulette';
+import Messages from './../../components/messages/Messages';
+import PlayersModal from './../../components/modals/PlayersModal';
+import '../lobby/lobby.css';
+function Tod() {
+  const matches = useMediaQuery('(max-width: 426px)');
+  const useStyles = makeStyles({
+    messageContainer: {
+      width: '40%',
+      position: 'absolute',
+      right: 0,
+      height: '100vh',
+      top: 0,
+      display: matches ? 'none' : 'flex',
+    },
+    todContainer: {
+      backgroundColor: 'pink',
+      height: '100vh',
+      width: matches ? '100%' : '60%',
+    },
+    actionButtonsContainer: {
+      position: 'absolute',
+      right: '40%',
+      top: 0,
+      display: 'flex',
+    },
+    roomNameContainer: {
+      height: matches ? '15%' : '30%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontFamily: 'Bangers',
+      fontSize: matches ? '5em' : '9vw',
+    },
+    wheelContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+      height: '70%',
+      padding: '2vh 0 2vh 0',
+    },
+    spinBtnContainer: { marginTop: '15px' },
+    mobileActionContainer: {
+      height: matches ? '15%' : '0',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      '& div': { display: 'flex' },
+    },
+  });
+
+  const classes = useStyles();
+  const roomState = useAppSelector((state) => state.room);
+  const userState = useAppSelector((state) => state.user);
+  const [openModal, setOpenModal] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleLeaveGame = () => {
+    socket.emit(userState.user?.creator ? 'endGame' : 'leaveRoom', {
+      userId: userState.user._id,
+      roomName: roomState.room.roomName,
+    });
+    dispatch(unsetRoom);
+    dispatch(unsetUser);
+  };
+  return (
+    <>
+      <div className={classes.todContainer}>
+        {!matches && (
+          <div className={classes.actionButtonsContainer}>
+            {userState.user?.creator && roomState.room.users.length > 1 && (
+              <div onClick={() => setOpenModal(true)}>
+                <ActionButtons buttonType="kickPlayer" />
+              </div>
+            )}
+
+            <div onClick={() => handleLeaveGame()}>
+              <ActionButtons buttonType="leaveGame" />
+            </div>
+          </div>
+        )}
+        <div className={classes.roomNameContainer}>
+          <span>{roomState.inRoom ? roomState.room.roomName : 'ROOMID'}</span>
+        </div>
+        <div className={classes.wheelContainer}>
+          <Roulette
+            users={[
+              'Rebeccaasdas dasdadsadasdsad',
+              'Charlotte',
+              'Charlotte',
+              'Charlotte',
+              'Charlotte',
+              'Charlotte',
+              'Charlotte',
+            ]}
+          />
+
+          <div className={classes.spinBtnContainer}>
+            <button className="pushable">
+              <span className="shadow"></span>
+              <span className="edge"></span>
+              <span className="front">SPIN</span>
+            </button>
+          </div>
+        </div>
+        {matches && (
+          <div className={classes.mobileActionContainer}>
+            <div>
+              <ActionButtons buttonType="kickPlayer" />
+              <ActionButtons buttonType="leaveGame" />
+            </div>
+            <div>
+              <ActionButtons buttonType="message" />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className={classes.messageContainer}>
+        <Messages />
+      </div>
+      <PlayersModal
+        handleClose={() => setOpenModal(false)}
+        openModal={openModal}
+      />
+    </>
+  );
+}
+
+export default Tod;
