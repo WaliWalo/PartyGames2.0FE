@@ -11,21 +11,23 @@ import Roulette from './../../components/roulette/Roulette';
 import Messages from './../../components/messages/Messages';
 import PlayersModal from './../../components/modals/PlayersModal';
 import '../lobby/lobby.css';
+import gsap from 'gsap/all';
 function Tod() {
   const matches = useMediaQuery('(max-width: 426px)');
   const useStyles = makeStyles({
     messageContainer: {
-      width: '40%',
+      width: matches ? '0' : '40%',
       position: 'absolute',
       right: 0,
-      height: '100vh',
-      top: 0,
-      display: matches ? 'none' : 'flex',
+      height: matches ? '0' : '100vh',
+      bottom: 0,
+      visibility: matches ? 'hidden' : 'visible',
     },
     todContainer: {
       backgroundColor: 'pink',
       height: '100vh',
       width: matches ? '100%' : '60%',
+      overflow: 'hidden',
     },
     actionButtonsContainer: {
       position: 'absolute',
@@ -57,6 +59,7 @@ function Tod() {
       alignItems: 'center',
       '& div': { display: 'flex' },
     },
+    mobileMessageContainer: {},
   });
 
   const classes = useStyles();
@@ -73,9 +76,39 @@ function Tod() {
     dispatch(unsetRoom);
     dispatch(unsetUser);
   };
+
+  const handleOpenMessage = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    gsap.to(`.${classes.messageContainer}`, {
+      autoAlpha: 1,
+      duration: 1,
+      borderRadius: '10% 10% 0 0',
+      height: '50%',
+      width: '100%',
+    });
+    gsap.to(`.${classes.mobileMessageContainer}`, { autoAlpha: 0 });
+  };
+
+  const handleCloseMessage = () => {
+    if (matches) {
+      gsap.to(`.${classes.messageContainer}`, {
+        autoAlpha: 0,
+        duration: 1,
+        height: 0,
+        width: 0,
+      });
+      gsap.to(`.${classes.mobileMessageContainer}`, { autoAlpha: 1 });
+    }
+  };
+
   return (
     <>
-      <div className={classes.todContainer}>
+      <div
+        className={classes.todContainer}
+        onClick={() => handleCloseMessage()}
+      >
         {!matches && (
           <div className={classes.actionButtonsContainer}>
             {userState.user?.creator && roomState.room.users.length > 1 && (
@@ -119,13 +152,21 @@ function Tod() {
               <ActionButtons buttonType="kickPlayer" />
               <ActionButtons buttonType="leaveGame" />
             </div>
-            <div>
+            <div
+              className={classes.mobileMessageContainer}
+              onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+                handleOpenMessage(e)
+              }
+            >
               <ActionButtons buttonType="message" />
             </div>
           </div>
         )}
       </div>
-      <div className={classes.messageContainer}>
+      <div
+        className={classes.messageContainer}
+        onClick={(e) => e.stopPropagation()}
+      >
         <Messages />
       </div>
       <PlayersModal

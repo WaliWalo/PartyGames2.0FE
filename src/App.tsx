@@ -76,7 +76,7 @@ function App() {
   }, [userState, roomState]);
 
   return (
-    <div>
+    <div className="appContainer">
       <Route path="/" exact>
         <Home />
       </Route>

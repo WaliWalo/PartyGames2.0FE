@@ -1,5 +1,5 @@
 .messageContainer {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   background-image: linear-gradient(
     to top,
@@ -14,6 +14,7 @@
   z-index: 100;
   top: 0;
   right: 0;
+  border-radius: inherit;
 }
 
 .contentContainer {
@@ -31,4 +32,14 @@
   width: 100%;
   display: flex;
   padding: 0.5rem;
+}
+
+@media only screen and (max-width: 426px) {
+  .inputsContainer {
+    height: 19.2%;
+  }
+
+  .contentContainer {
+    height: 80.8%;
+  }
 }

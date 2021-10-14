@@ -8,30 +8,31 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      padding: '2px 4px',
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-    },
-    input: {
-      marginLeft: theme.spacing(1),
-      flex: 1,
-    },
-    iconButton: {
-      padding: 10,
-    },
-    divider: {
-      height: 28,
-      margin: 4,
-    },
-  })
-);
+import { useMediaQuery } from '@material-ui/core';
 
 function Messages() {
+  const matches = useMediaQuery('(max-width: 426px)');
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      root: {
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+      },
+      input: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
+      },
+      iconButton: {
+        padding: 10,
+      },
+      divider: {
+        height: 28,
+        margin: 4,
+      },
+    })
+  );
   const classes = useStyles();
 
   return (

@@ -6,7 +6,8 @@ import SingleUser from './SingleUser';
 
 function Roulette(props: IRouletteProps) {
   const matches = useMediaQuery('(max-width: 426px)');
-  const rouletteDimension = matches ? '15em' : '30vw';
+  const tableMatch = useMediaQuery('(max-width:738px and min-width:426px)');
+  const rouletteDimension = matches ? '15em' : tableMatch ? '40em' : '30vw';
   const useStyles = makeStyles({
     rouletteContainer: {
       height: rouletteDimension,
