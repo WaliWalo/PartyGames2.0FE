@@ -12,6 +12,7 @@ import Messages from './../../components/messages/Messages';
 import PlayersModal from './../../components/modals/PlayersModal';
 import '../lobby/lobby.css';
 import gsap from 'gsap/all';
+import { IUser } from './../../store/user/types';
 function Tod() {
   const matches = useMediaQuery('(max-width: 426px)');
   const useStyles = makeStyles({
@@ -51,7 +52,6 @@ function Tod() {
       height: '70%',
       padding: '2vh 0 2vh 0',
     },
-    spinBtnContainer: { marginTop: '15px' },
     mobileActionContainer: {
       height: matches ? '15%' : '0',
       display: 'flex',
@@ -127,24 +127,12 @@ function Tod() {
         </div>
         <div className={classes.wheelContainer}>
           <Roulette
-            users={[
-              'Rebeccaasdas dasdadsadasdsad',
-              'Charlotte',
-              'Charlotte',
-              'Charlotte',
-              'Charlotte',
-              'Charlotte',
-              'Charlotte',
-            ]}
+            users={
+              roomState.inRoom
+                ? roomState.room.users.map((user: IUser) => user.name)
+                : []
+            }
           />
-
-          <div className={classes.spinBtnContainer}>
-            <button className="pushable">
-              <span className="shadow"></span>
-              <span className="edge"></span>
-              <span className="front">SPIN</span>
-            </button>
-          </div>
         </div>
         {matches && (
           <div className={classes.mobileActionContainer}>

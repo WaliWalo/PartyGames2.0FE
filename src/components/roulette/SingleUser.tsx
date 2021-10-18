@@ -32,7 +32,7 @@ function SingleUser(props: ISingleUserProps) {
         <text className={classes.texts}>
           <textPath
             href="#MyPath"
-            font-size={matches ? '5' : '5'}
+            font-size={matches ? '6' : '9'}
             startOffset="5"
             textLength="40%"
             // spacing="auto"
