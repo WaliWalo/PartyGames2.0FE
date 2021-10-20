@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import socket from '../../utilities/socketApi';
 import { AppDispatch } from '../setup/store';
 import { IUser } from './types';
 
@@ -32,7 +33,9 @@ export const getUserAsync = () => async (dispatch: AppDispatch) => {
         `${process.env.REACT_APP_BE_URL}/users/${userId}`
       );
       if (response.ok) {
-        dispatch(setUser(await response.json()));
+        const user = await response.json();
+        const userWithSocketId = { ...user, socketId: socket.id };
+        dispatch(setUser(userWithSocketId));
       } else {
         const err = { status: response.status, message: response.statusText };
         dispatch(setError(err));

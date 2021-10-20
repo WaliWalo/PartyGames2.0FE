@@ -20,9 +20,6 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-    dispatch(getUserAsync());
-    dispatch(getRoomAsync());
-    dispatch(getQuestionsAsync());
     socket.on('joinRoom', (data: IJoinRoomSocket) => {
       if (data.status === 'ok') {
         data.userId !== undefined &&
@@ -44,12 +41,9 @@ function App() {
       socket.emit('userConnected', { userId: userState.user?._id });
 
     socket.on('connect', () => {
-      dispatch(
-        setUser({
-          ...userState.user,
-          socketId: socket.id,
-        })
-      );
+      dispatch(getUserAsync());
+      dispatch(getRoomAsync());
+      dispatch(getQuestionsAsync());
     });
     // once user creates room this will happen
     userState.user?.socketId !== undefined &&

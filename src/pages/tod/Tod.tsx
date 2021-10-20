@@ -7,14 +7,14 @@ import ActionButtons from './../../components/buttons/ActionButtons';
 import socket from './../../utilities/socketApi';
 import { unsetRoom } from '../../store/room/roomSlice';
 import { unsetUser } from '../../store/user/userSlice';
-import Roulette from './../../components/roulette/Roulette';
 import Messages from './../../components/messages/Messages';
 import PlayersModal from './../../components/modals/PlayersModal';
-import '../lobby/lobby.css';
 import gsap from 'gsap/all';
-import { IUser } from './../../store/user/types';
+import Roulette2 from './../../components/roulette/Roulette2';
 function Tod() {
   const matches = useMediaQuery('(max-width: 426px)');
+  const tableMatch = useMediaQuery('(max-width:738px and min-width:426px)');
+
   const useStyles = makeStyles({
     messageContainer: {
       width: matches ? '0' : '40%',
@@ -49,7 +49,7 @@ function Tod() {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
-      height: '70%',
+      height: tableMatch ? '58%' : '70%',
       padding: '2vh 0 2vh 0',
     },
     mobileActionContainer: {
@@ -126,13 +126,14 @@ function Tod() {
           <span>{roomState.inRoom ? roomState.room.roomName : 'ROOMID'}</span>
         </div>
         <div className={classes.wheelContainer}>
-          <Roulette
+          {/* <Roulette
             users={
               roomState.inRoom
                 ? roomState.room.users.map((user: IUser) => user.name)
                 : []
             }
-          />
+          /> */}
+          <Roulette2 />
         </div>
         {matches && (
           <div className={classes.mobileActionContainer}>

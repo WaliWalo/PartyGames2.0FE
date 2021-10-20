@@ -3,8 +3,10 @@ import { makeStyles, useMediaQuery } from '@material-ui/core';
 import { IRouletteProps } from './types';
 import NavigationIcon from '@material-ui/icons/Navigation';
 import SingleUser from './SingleUser';
-import { useAppSelector } from './../../store/setup/store';
+import { useAppDispatch, useAppSelector } from './../../store/setup/store';
 import gsap from 'gsap/all';
+import { setRoom } from '../../store/room/roomSlice';
+import { IRoom } from '../../store/room/types';
 
 function Roulette(props: IRouletteProps) {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -43,15 +45,25 @@ function Roulette(props: IRouletteProps) {
 
   const classes = useStyles();
   const userState = useAppSelector((state) => state.user);
+  const roomState = useAppSelector((state) => state.room);
+  const dispatch = useAppDispatch();
 
   const spinWheel = () => {
     console.log('test');
-    const chosenIndex = 0;
+    const chosenIndex = 1;
     const position = ((360 / props.users.length) * chosenIndex) / 2;
     const rotate = position + 360 * 5;
     gsap.to(`.${classes.rouletteInnerContainer}`, {
       duration: 3,
       rotate: `+=${rotate}`,
+      onComplete: () => {
+        const newUsers = [roomState.room.users[1], roomState.room.users[0]];
+        const newRoom: IRoom = {
+          ...roomState.room,
+          users: newUsers,
+        };
+        dispatch(setRoom(newRoom));
+      },
     });
   };
 
