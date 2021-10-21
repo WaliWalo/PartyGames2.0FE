@@ -111,7 +111,7 @@ function Tod() {
       >
         {!matches && (
           <div className={classes.actionButtonsContainer}>
-            {userState.user?.creator && roomState.room.users.length > 1 && (
+            {userState.user?.creator && roomState.room?.users.length > 1 && (
               <div onClick={() => setOpenModal(true)}>
                 <ActionButtons buttonType="kickPlayer" />
               </div>
@@ -126,13 +126,6 @@ function Tod() {
           <span>{roomState.inRoom ? roomState.room.roomName : 'ROOMID'}</span>
         </div>
         <div className={classes.wheelContainer}>
-          {/* <Roulette
-            users={
-              roomState.inRoom
-                ? roomState.room.users.map((user: IUser) => user.name)
-                : []
-            }
-          /> */}
           <Roulette2 />
         </div>
         {matches && (

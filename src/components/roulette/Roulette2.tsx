@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Wheel } from 'react-custom-roulette';
 import { useAppSelector } from '../../store/setup/store';
 import { IUser } from '../../store/user/types';
 import { makeStyles } from '@material-ui/core/styles';
+import socket from './../../utilities/socketApi';
 
 function Roulette2() {
   const useStyles = makeStyles({
@@ -25,10 +26,23 @@ function Roulette2() {
       })
     : [];
 
+  useEffect(() => {
+    roomState.status === 'ok' &&
+      socket.once('randomUser', (selectedUser: IUser) => {
+        const selectedUserIndex = roomState.room?.users.findIndex(
+          (user: IUser) => user._id === selectedUser._id
+        );
+        console.log(selectedUserIndex);
+        setPrizeNumber(selectedUserIndex);
+        setMustSpin(true);
+      });
+  });
+
   const handleSpinClick = () => {
-    const newPrizeNumber = Math.floor(Math.random() * users.length);
-    setPrizeNumber(0);
-    setMustSpin(true);
+    socket.emit('randomUser', {
+      userId: userState.user?._id,
+      roomName: roomState.room?.roomName,
+    });
   };
 
   return (
