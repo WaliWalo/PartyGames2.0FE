@@ -4,6 +4,8 @@ import { useAppSelector } from '../../store/setup/store';
 import { IUser } from '../../store/user/types';
 import { makeStyles } from '@material-ui/core/styles';
 import socket from './../../utilities/socketApi';
+import QuestionsModal from './../modals/QuestionsModal';
+import OptionsModal from '../modals/OptionsModal';
 
 function Roulette2() {
   const useStyles = makeStyles({
@@ -19,6 +21,8 @@ function Roulette2() {
   const [prizeNumber, setPrizeNumber] = useState(0);
   const roomState = useAppSelector((state) => state.room);
   const userState = useAppSelector((state) => state.user);
+  const [openQuestionsModal, setOpenQuestionsModal] = useState(false);
+  const [openOptionsModal, setOpenOptionsModal] = useState(false);
 
   const users = roomState.inRoom
     ? roomState.room.users.map((user: IUser) => {
@@ -28,13 +32,20 @@ function Roulette2() {
 
   useEffect(() => {
     roomState.status === 'ok' &&
-      socket.once('randomUser', (selectedUser: IUser) => {
+      socket.on('randomUser', (selectedUser: IUser) => {
         const selectedUserIndex = roomState.room?.users.findIndex(
           (user: IUser) => user._id === selectedUser._id
         );
-        console.log(selectedUserIndex);
         setPrizeNumber(selectedUserIndex);
         setMustSpin(true);
+
+        setTimeout(
+          () =>
+            selectedUser._id === userState.user._id
+              ? setOpenOptionsModal(true)
+              : alert(selectedUser.name + ' is chosen!'),
+          12000
+        );
       });
   });
 
@@ -67,6 +78,17 @@ function Roulette2() {
           </button>
         </div>
       )}
+      <OptionsModal
+        handleClose={() => setOpenOptionsModal(false)}
+        openModal={openOptionsModal}
+        options={['true', 'false']}
+      />
+
+      <QuestionsModal
+        handleClose={() => setOpenQuestionsModal(false)}
+        openModal={openQuestionsModal}
+        tod={'truth'}
+      />
     </>
   );
 }

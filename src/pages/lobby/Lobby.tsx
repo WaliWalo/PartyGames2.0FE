@@ -11,9 +11,7 @@ import socket from './../../utilities/socketApi';
 import { getRoomAsync, unsetRoom } from './../../store/room/roomSlice';
 import ActionButtons from './../../components/buttons/ActionButtons';
 import PlayersModal from './../../components/modals/PlayersModal';
-import { useDispatch } from 'react-redux';
 import { unsetUser } from '../../store/user/userSlice';
-import { useHistory } from 'react-router-dom';
 
 function Lobby() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -107,14 +105,13 @@ function Lobby() {
   const roomState = useAppSelector((state) => state.room);
   const userState = useAppSelector((state) => state.user);
   const [openModal, setOpenModal] = useState(false);
-  const history = useHistory();
 
   const names = roomState.inRoom
     ? roomState.room.users.map((user: IUser) => user.name)
     : [];
 
   roomState.status === 'ok' &&
-    socket.on(roomState.room.roomName, (data: object) =>
+    socket.on(roomState.room?.roomName, (data: object) =>
       dispatch(getRoomAsync())
     );
 
@@ -125,6 +122,7 @@ function Lobby() {
     if (e.code === 'Space') {
       moveBall();
     }
+    console.log('test');
   };
 
   function isOverlap(a: HTMLDivElement, b: HTMLDivElement | null | Element) {
@@ -156,7 +154,6 @@ function Lobby() {
   }
 
   useEffect(() => {
-    roomState?.room?.started && history.push(`/tod/${roomState.room._id}`);
     gsap.to(`.${classes.movingContainer}`, {
       left: window.innerWidth - 50,
       duration: 3,
@@ -185,6 +182,7 @@ function Lobby() {
           yoyo: true,
         },
       });
+    // eslint-disable-next-line
   }, []);
 
   const moveBall = () => {
@@ -231,10 +229,17 @@ function Lobby() {
     dispatch(unsetUser);
   };
 
+  const handleStartGame = () => {
+    socket.emit('startGame', {
+      userId: userState.user._id,
+      roomName: roomState.room.roomName,
+    });
+  };
+
   return (
     <div className={classes.container} onClick={matches ? moveBall : () => {}}>
       <div className={classes.actionButtonsContainer}>
-        {userState.user?.creator && roomState.room.users.length > 1 && (
+        {userState.user?.creator && roomState.room?.users?.length > 1 && (
           <div onClick={() => setOpenModal(true)}>
             <ActionButtons buttonType="kickPlayer" />
           </div>
@@ -272,7 +277,10 @@ function Lobby() {
         ))}
       </Grid>
       {userState.user?.creator && (
-        <div className={classes.startBtnContainer}>
+        <div
+          className={classes.startBtnContainer}
+          onClick={() => handleStartGame()}
+        >
           <button className="pushable">
             <span className="shadow"></span>
             <span className="edge"></span>
@@ -285,20 +293,19 @@ function Lobby() {
           {!matches ? 'Hit Space' : 'Tap on screen'}
         </Alert>
       </div>
-      <div className={classes.movingContainer}>
-        {!matches && (
-          <input
-            autoFocus
-            className={classes.input}
-            onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
-              containerOnKeyPress(e)
-            }
-            value=""
-            readOnly
-            onBlur={(e) => !openModal && e.currentTarget.focus()}
-          ></input>
-        )}
-      </div>
+      <div className={classes.movingContainer}></div>
+      {!matches && (
+        <input
+          autoFocus
+          className={classes.input}
+          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) =>
+            containerOnKeyPress(e)
+          }
+          value=""
+          readOnly
+          onBlur={(e) => !openModal && e.currentTarget.focus()}
+        ></input>
+      )}
       <PlayersModal
         handleClose={() => setOpenModal(false)}
         openModal={openModal}

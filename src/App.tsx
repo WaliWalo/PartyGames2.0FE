@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { useAppDispatch, useAppSelector } from './store/setup/store';
-import { getUserAsync, setUser } from './store/user/userSlice';
+import { getUserAsync } from './store/user/userSlice';
 import { getRoomAsync, setRoom } from './store/room/roomSlice';
 import Home from './pages/home/Home';
 import { getQuestionsAsync } from './store/questions/questionsSlice';
-import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom';
+import { Route, useHistory } from 'react-router-dom';
 import Lobby from './pages/lobby/Lobby';
 import socket from './utilities/socketApi';
 import { ISocketIdType } from './utilities/types';
@@ -34,6 +34,7 @@ function App() {
     return function disconnect() {
       socket.disconnect();
     };
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -46,8 +47,8 @@ function App() {
       dispatch(getQuestionsAsync());
     });
     // once user creates room this will happen
-    userState.user?.socketId !== undefined &&
-      socket.on(userState.user?.socketId, (data: ISocketIdType) => {
+    userState.socketId !== undefined &&
+      socket.on(userState.socketId, (data: ISocketIdType) => {
         if (data.status === 'ok') {
           dispatch(setRoom(data.data));
           localStorage.setItem('userId', data.data.users[0]._id);
@@ -63,9 +64,13 @@ function App() {
         }
       });
 
-    roomState.inRoom
-      ? history.push(`/lobby/${roomState.room._id}`)
-      : history.push(`/`);
+    socket.on('startGame', () => dispatch(getRoomAsync()));
+
+    roomState?.room?.started
+      ? history.push(`/tod/${roomState.room?._id}`)
+      : history.push(`/lobby/${roomState.room?._id}`);
+
+    !roomState.inRoom && history.push(`/`);
     // eslint-disable-next-line
   }, [userState, roomState]);
 

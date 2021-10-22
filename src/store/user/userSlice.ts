@@ -4,23 +4,31 @@ import { AppDispatch } from '../setup/store';
 import { IUser } from './types';
 
 type UserState =
-  | { enteredGame: false }
-  | { enteredGame: true; user: IUser; status: 'ok' }
+  | { enteredGame: false; socketId: string }
+  | { enteredGame: true; user: IUser; status: 'ok'; socketId: string }
   | { status: 'loading' }
   | { status: 'error'; error: object };
 
-const initialState: UserState = { enteredGame: false } as UserState;
+const initialState: UserState = {
+  enteredGame: false,
+  socketId: socket.id,
+} as UserState;
 
 const userSlice = createSlice({
   name: 'users',
   initialState: initialState,
   reducers: {
     setUser: (state, action: PayloadAction<IUser>) =>
-      (state = { status: 'ok', enteredGame: true, user: action.payload }),
+      (state = {
+        status: 'ok',
+        enteredGame: true,
+        user: action.payload,
+        socketId: socket.id,
+      }),
     setError: (state, action: PayloadAction<object>) =>
       (state = { status: 'error', error: action.payload }),
     setLoading: (state) => (state = { status: 'loading' }),
-    unsetUser: (state) => (state = { enteredGame: false }),
+    unsetUser: (state) => (state = { enteredGame: false, socketId: socket.id }),
   },
 });
 
@@ -34,8 +42,8 @@ export const getUserAsync = () => async (dispatch: AppDispatch) => {
       );
       if (response.ok) {
         const user = await response.json();
-        const userWithSocketId = { ...user, socketId: socket.id };
-        dispatch(setUser(userWithSocketId));
+
+        dispatch(setUser(user));
       } else {
         const err = { status: response.status, message: response.statusText };
         dispatch(setError(err));
@@ -44,6 +52,8 @@ export const getUserAsync = () => async (dispatch: AppDispatch) => {
       const err = { status: 500, message: 'Please try again later' };
       dispatch(setError(err));
     }
+  } else {
+    dispatch(unsetUser());
   }
 };
 

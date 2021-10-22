@@ -13,18 +13,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import gsap from 'gsap';
 import HomeLoader from './../loader/HomeLoader';
-// import QuestionsModal from './../../components/modals/QuestionsModal';
-import Messages from './../../components/messages/Messages';
-import Scoreboard from './../../components/scoreboard/Scoreboard';
-import Roulette from './../../components/roulette/Roulette';
-import Bar from './../../components/bar/Bar';
-import BingoBoard from './../../components/bingoBoard/BingoBoard';
-import { useHistory } from 'react-router-dom';
 import socket from './../../utilities/socketApi';
-import { useAppDispatch, useAppSelector } from './../../store/setup/store';
-import { IJoinRoomSocket } from './types';
-import { getUserAsync } from './../../store/user/userSlice';
-import { getRoomAsync } from './../../store/room/roomSlice';
+import { useAppSelector } from './../../store/setup/store';
 
 function Home() {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -33,34 +23,31 @@ function Home() {
   const [joinUser, setJoinUser] = useState('');
   const [roomName, setRoomName] = useState('');
   const roomState = useAppSelector((state) => state.room);
-  const dispatch = useAppDispatch();
 
-  // const [openModal, setOpenModal] = useState(false);
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setGame(event.target.value as string);
   };
 
   useEffect(() => {
-    !roomState.inRoom &&
-      gsap.to('#party', {
-        x: '130%',
-        duration: 1.5,
-        ease: 'bounce.out',
-        onComplete: () => {
-          gsap.to('#games', {
-            x: '150%',
-            duration: 1.5,
-            ease: 'bounce.out',
-            onComplete: () => {
-              gsap.to('#homeLoader', {
-                opacity: 0,
-                display: 'none',
-                duration: 1,
-              });
-            },
-          });
-        },
-      });
+    gsap.to('#party', {
+      x: '130%',
+      duration: 1.5,
+      ease: 'bounce.out',
+      onComplete: () => {
+        gsap.to('#games', {
+          x: '150%',
+          duration: 1.5,
+          ease: 'bounce.out',
+          onComplete: () => {
+            gsap.to('#homeLoader', {
+              opacity: 0,
+              display: 'none',
+              duration: 1,
+            });
+          },
+        });
+      },
+    });
   }, [matches, roomState]);
 
   const createRoomSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -179,11 +166,6 @@ function Home() {
             answer: 'afdsafdasfasfdsfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
           },
         ]}
-      /> */}
-      {/* <QuestionsModal
-        handleClose={() => setOpenModal(false)}
-        openModal={openModal}
-        tod={'truth'}
       /> */}
     </>
   );
