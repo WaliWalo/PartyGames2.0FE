@@ -12,6 +12,8 @@ import {
 import React from 'react';
 import { IModalProps } from './types';
 import './modals.css';
+import socket from '../../utilities/socketApi';
+import { useAppSelector } from '../../store/setup/store';
 
 function OptionsModal(props: IModalProps) {
   const matches = useMediaQuery('(max-width: 426px)');
@@ -38,6 +40,18 @@ function OptionsModal(props: IModalProps) {
   );
 
   const classes = useStyles();
+  const roomState = useAppSelector((state) => state.room);
+  const userState = useAppSelector((state) => state.user);
+
+  const handleSelectedOption = (option: String) => {
+    socket.emit('input', {
+      userId: userState.user?._id,
+      roomName: roomState.room?.roomName,
+      type: props.type,
+      value: option,
+    });
+    props.handleClose();
+  };
 
   return (
     <div>
@@ -56,7 +70,11 @@ function OptionsModal(props: IModalProps) {
               className="optionsBtn"
               variant="contained"
               color="primary"
-              onClick={props.handleClose}
+              onClick={() =>
+                handleSelectedOption(
+                  props.options !== undefined ? props.options[0] : ''
+                )
+              }
             >
               {props.options !== undefined && props.options[0]}
             </Button>
@@ -71,7 +89,11 @@ function OptionsModal(props: IModalProps) {
               className="optionsBtn"
               variant="contained"
               color="secondary"
-              onClick={props.handleClose}
+              onClick={() =>
+                handleSelectedOption(
+                  props.options !== undefined ? props.options[1] : ''
+                )
+              }
             >
               {props.options !== undefined && props.options[1]}
             </Button>

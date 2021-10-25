@@ -16,6 +16,7 @@ import './modals.css';
 import { Autocomplete } from '@material-ui/lab';
 import { useAppSelector } from './../../store/setup/store';
 import { IQuestion } from './../../store/questions/types';
+import socket from '../../utilities/socketApi';
 function QuestionsModal(props: IModalProps) {
   const matches = useMediaQuery('(max-width: 426px)');
 
@@ -44,6 +45,22 @@ function QuestionsModal(props: IModalProps) {
   const questions = useAppSelector((state) => state.questions.questions);
 
   const [selectedQuestion, setSelectedQuestion] = useState('');
+  const roomState = useAppSelector((state) => state.room);
+  const userState = useAppSelector((state) => state.user);
+
+  const handleSelectedOption = () => {
+    socket.emit('nextUser', {
+      userId: userState.user?._id,
+      roomName: roomState.room?.roomName,
+    });
+    socket.emit('input', {
+      userId: userState.user?._id,
+      roomName: roomState.room?.roomName,
+      type: props.type,
+      value: selectedQuestion,
+    });
+    props.handleClose();
+  };
   return (
     <div>
       <Modal
@@ -89,7 +106,7 @@ function QuestionsModal(props: IModalProps) {
                 className="questionsBtn"
                 variant="contained"
                 color="primary"
-                onClick={props.handleClose}
+                onClick={handleSelectedOption}
               >
                 ENTER
               </Button>

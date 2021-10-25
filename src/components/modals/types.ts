@@ -3,4 +3,5 @@ export interface IModalProps {
   openModal: boolean;
   options?: Array<String>;
   tod?: 'truth' | 'dare';
+  type?: String;
 }

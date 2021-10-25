@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Wheel } from 'react-custom-roulette';
-import { useAppSelector } from '../../store/setup/store';
+import { useAppDispatch, useAppSelector } from '../../store/setup/store';
 import { IUser } from '../../store/user/types';
 import { makeStyles } from '@material-ui/core/styles';
 import socket from './../../utilities/socketApi';
 import QuestionsModal from './../modals/QuestionsModal';
 import OptionsModal from '../modals/OptionsModal';
+import { getUserAsync } from '../../store/user/userSlice';
 
 function Roulette2() {
   const useStyles = makeStyles({
@@ -23,6 +24,8 @@ function Roulette2() {
   const userState = useAppSelector((state) => state.user);
   const [openQuestionsModal, setOpenQuestionsModal] = useState(false);
   const [openOptionsModal, setOpenOptionsModal] = useState(false);
+  const [todOption, setTodOption] = useState<'truth' | 'dare'>('truth');
+  const dispatch = useAppDispatch();
 
   const users = roomState.inRoom
     ? roomState.room.users.map((user: IUser) => {
@@ -31,23 +34,49 @@ function Roulette2() {
     : [];
 
   useEffect(() => {
-    roomState.status === 'ok' &&
+    if (roomState.status === 'ok' && userState.status === 'ok') {
       socket.on('randomUser', (selectedUser: IUser) => {
         const selectedUserIndex = roomState.room?.users.findIndex(
           (user: IUser) => user._id === selectedUser._id
         );
         setPrizeNumber(selectedUserIndex);
         setMustSpin(true);
-
         setTimeout(
           () =>
             selectedUser._id === userState.user._id
               ? setOpenOptionsModal(true)
-              : alert(selectedUser.name + ' is chosen!'),
-          12000
+              : console.log(selectedUser.name),
+          // 12000
+          1000
         );
       });
+
+      socket.on('input', ({ value }) => {
+        setTodOption(value);
+        console.log(value);
+        if (userState.user.turn) {
+          setOpenQuestionsModal(true);
+        }
+      });
+
+      socket.on('nextUser', (user: IUser) => {
+        console.log(user);
+        dispatch(getUserAsync());
+      });
+    }
+
+    return () => {
+      socket.off('randomUser');
+      socket.off('input');
+      socket.off('nextUser');
+    };
   });
+
+  useEffect(() => {
+    if (!userState.user?.turn) {
+      setOpenQuestionsModal(false);
+    }
+  }, [userState?.user?.turn]);
 
   const handleSpinClick = () => {
     socket.emit('randomUser', {
@@ -81,13 +110,15 @@ function Roulette2() {
       <OptionsModal
         handleClose={() => setOpenOptionsModal(false)}
         openModal={openOptionsModal}
-        options={['true', 'false']}
+        options={['truth', 'dare']}
+        type="normal"
       />
 
       <QuestionsModal
         handleClose={() => setOpenQuestionsModal(false)}
         openModal={openQuestionsModal}
-        tod={'truth'}
+        tod={todOption}
+        type="normal"
       />
     </>
   );
