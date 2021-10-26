@@ -8,12 +8,14 @@ import {
 import roomReducer from '../room/roomSlice';
 import userReducer from '../user/userSlice';
 import questionsReducer from '../questions/questionsSlice';
+import messagesReducer from '../messages/messagesSlice';
 
 const store = configureStore({
   reducer: {
     room: roomReducer,
     user: userReducer,
     questions: questionsReducer,
+    messages: messagesReducer,
   },
 });
 

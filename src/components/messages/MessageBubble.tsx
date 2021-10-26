@@ -1,6 +1,5 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
-import './messageBubble.css';
 import { IMessageBubbleProps } from './types';
 import 'typeface-fredoka-one';
 

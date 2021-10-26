@@ -7,6 +7,7 @@ import socket from './../../utilities/socketApi';
 import QuestionsModal from './../modals/QuestionsModal';
 import OptionsModal from '../modals/OptionsModal';
 import { getUserAsync } from '../../store/user/userSlice';
+import { setMessages } from '../../store/messages/messagesSlice';
 
 function Roulette2() {
   const useStyles = makeStyles({
@@ -22,6 +23,7 @@ function Roulette2() {
   const [prizeNumber, setPrizeNumber] = useState(0);
   const roomState = useAppSelector((state) => state.room);
   const userState = useAppSelector((state) => state.user);
+  const messagesState = useAppSelector((state) => state.messages);
   const [openQuestionsModal, setOpenQuestionsModal] = useState(false);
   const [openOptionsModal, setOpenOptionsModal] = useState(false);
   const [todOption, setTodOption] = useState<'truth' | 'dare'>('truth');
@@ -42,10 +44,19 @@ function Roulette2() {
         setPrizeNumber(selectedUserIndex);
         setMustSpin(true);
         setTimeout(
-          () =>
-            selectedUser._id === userState.user._id
-              ? setOpenOptionsModal(true)
-              : console.log(selectedUser.name),
+          () => {
+            const newMessages = [
+              ...messagesState.messages,
+              {
+                _id: 'notification',
+                content: `${selectedUser.name} selected`,
+                sender: userState.user,
+              },
+            ];
+            dispatch(setMessages(newMessages));
+            selectedUser._id === userState.user._id &&
+              setOpenOptionsModal(true);
+          },
           // 12000
           1000
         );
@@ -53,7 +64,15 @@ function Roulette2() {
 
       socket.on('input', ({ value }) => {
         setTodOption(value);
-        console.log(value);
+        const newMessages = [
+          ...messagesState.messages,
+          {
+            _id: 'notification',
+            content: `${userState.user.name} input: ${value}`,
+            sender: userState.user,
+          },
+        ];
+        dispatch(setMessages(newMessages));
         if (userState.user.turn) {
           setOpenQuestionsModal(true);
         }
@@ -61,6 +80,15 @@ function Roulette2() {
 
       socket.on('nextUser', (user: IUser) => {
         console.log(user);
+        const newMessages = [
+          ...messagesState.messages,
+          {
+            _id: 'notification',
+            content: `Next user to spin: ${user.name}`,
+            sender: userState.user,
+          },
+        ];
+        dispatch(setMessages(newMessages));
         dispatch(getUserAsync());
       });
     }
