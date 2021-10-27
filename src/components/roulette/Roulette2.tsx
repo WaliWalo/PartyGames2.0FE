@@ -79,7 +79,6 @@ function Roulette2() {
       });
 
       socket.on('nextUser', (user: IUser) => {
-        console.log(user);
         const newMessages = [
           ...messagesState.messages,
           {

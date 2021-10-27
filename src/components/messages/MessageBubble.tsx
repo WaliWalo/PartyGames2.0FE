@@ -2,6 +2,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
 import { IMessageBubbleProps } from './types';
 import 'typeface-fredoka-one';
+import { useAppSelector } from './../../store/setup/store';
 
 function MessageBubble(props: IMessageBubbleProps) {
   const useStyles = makeStyles((theme: Theme) =>
@@ -50,6 +51,7 @@ function MessageBubble(props: IMessageBubbleProps) {
   );
 
   const classes = useStyles();
+  const userState = useAppSelector((state) => state.user);
 
   return (
     <div
@@ -57,7 +59,7 @@ function MessageBubble(props: IMessageBubbleProps) {
     >
       {!props.sender && (
         <div className={classes.usernameContainer}>
-          <strong>user</strong>
+          <strong>{userState.user?.name}</strong>
         </div>
       )}
 
