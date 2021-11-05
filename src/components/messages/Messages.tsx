@@ -59,7 +59,7 @@ function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  messagesState.messages?.length > 0 &&
+  messagesState.messages !== undefined &&
     socket.on('sendMessage', (message: IMessage) => {
       dispatch(setMessages([...messagesState.messages, message]));
     });
@@ -93,7 +93,7 @@ function Messages() {
         {messagesState.messages?.length !== 0 &&
           messagesState.messages?.map((message: IMessage, index: number) => {
             const sender =
-              userState.user?._id === message.sender._id ? true : false;
+              userState.user?._id === message.sender?._id ? true : false;
             return message._id === 'notification' ? (
               <div className={classes.notificationMsg} key={index}>
                 <p>{message.content}</p>
@@ -103,6 +103,9 @@ function Messages() {
                 key={index}
                 message={message.content}
                 sender={sender}
+                senderName={
+                  message.sender === null ? 'user left' : message.sender?.name
+                }
               />
             );
           })}

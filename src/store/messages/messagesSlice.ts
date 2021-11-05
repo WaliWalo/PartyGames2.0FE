@@ -3,12 +3,14 @@ import { AppDispatch } from '../setup/store';
 import { IMessage } from './types';
 
 type MessageState =
-  | { messages: [] }
   | { status: 'ok'; messages: Array<IMessage> }
   | { status: 'loading' }
   | { status: 'error'; error: object };
 
-const initialState: MessageState = { messages: [] } as MessageState;
+const initialState: MessageState = {
+  status: 'ok',
+  messages: [],
+} as MessageState;
 
 const messagesSlice = createSlice({
   name: 'messages',

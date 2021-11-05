@@ -12,6 +12,7 @@ import socket from './utilities/socketApi';
 import { ISocketIdType } from './utilities/types';
 import { IJoinRoomSocket } from './pages/home/types';
 import Tod from './pages/tod/Tod';
+import { IUser } from './store/user/types';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -71,6 +72,16 @@ function App() {
       : history.push(`/lobby/${roomState.room?._id}`);
 
     !roomState.inRoom && history.push(`/`);
+
+    userState.status === 'ok' &&
+      socket.on('leaveRoom', (user: IUser) => {
+        if (userState.user._id === user._id) {
+          localStorage.removeItem('userId');
+          history.push('/');
+        }
+        dispatch(getRoomAsync());
+      });
+
     // eslint-disable-next-line
   }, [userState, roomState]);
 

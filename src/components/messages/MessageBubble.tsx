@@ -51,7 +51,6 @@ function MessageBubble(props: IMessageBubbleProps) {
   );
 
   const classes = useStyles();
-  const userState = useAppSelector((state) => state.user);
 
   return (
     <div
@@ -59,7 +58,7 @@ function MessageBubble(props: IMessageBubbleProps) {
     >
       {!props.sender && (
         <div className={classes.usernameContainer}>
-          <strong>{userState.user?.name}</strong>
+          <strong>{props.senderName}</strong>
         </div>
       )}
 

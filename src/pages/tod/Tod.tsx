@@ -11,6 +11,8 @@ import Messages from './../../components/messages/Messages';
 import PlayersModal from './../../components/modals/PlayersModal';
 import gsap from 'gsap/all';
 import Roulette2 from './../../components/roulette/Roulette2';
+import { getRoomAsync } from './../../store/room/roomSlice';
+import { useHistory } from 'react-router-dom';
 function Tod() {
   const matches = useMediaQuery('(max-width: 426px)');
   const tableMatch = useMediaQuery('(max-width:738px and min-width:426px)');
@@ -20,9 +22,10 @@ function Tod() {
       width: matches ? '0' : '40%',
       position: 'absolute',
       right: 0,
-      height: matches ? '0' : '100vh',
+      height: matches ? '100vh' : '100vh',
       bottom: 0,
       visibility: matches ? 'hidden' : 'visible',
+      zIndex: 100,
     },
     todContainer: {
       backgroundColor: 'pink',
@@ -67,15 +70,23 @@ function Tod() {
   const userState = useAppSelector((state) => state.user);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
+  const history = useHistory();
 
   const handleLeaveGame = () => {
     socket.emit(userState.user?.creator ? 'endGame' : 'leaveRoom', {
       userId: userState.user._id,
       roomName: roomState.room.roomName,
     });
+    localStorage.removeItem('userId');
     dispatch(unsetRoom);
     dispatch(unsetUser);
+    history.push('/');
   };
+
+  roomState.status === 'ok' &&
+    socket.on(roomState.room?.roomName, (data: object) =>
+      dispatch(getRoomAsync())
+    );
 
   const handleOpenMessage = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -96,7 +107,7 @@ function Tod() {
       gsap.to(`.${classes.messageContainer}`, {
         autoAlpha: 0,
         duration: 1,
-        height: 0,
+        height: '100vh',
         width: 0,
       });
       gsap.to(`.${classes.mobileMessageContainer}`, { autoAlpha: 1 });
@@ -131,8 +142,12 @@ function Tod() {
         {matches && (
           <div className={classes.mobileActionContainer}>
             <div>
-              <ActionButtons buttonType="kickPlayer" />
-              <ActionButtons buttonType="leaveGame" />
+              {userState.user?.creator && roomState.room?.users?.length > 1 && (
+                <ActionButtons buttonType="kickPlayer" />
+              )}
+              <div onClick={() => handleLeaveGame()}>
+                <ActionButtons buttonType="leaveGame" />
+              </div>
             </div>
             <div
               className={classes.mobileMessageContainer}
